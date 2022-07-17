@@ -37,11 +37,11 @@ namespace Workday
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.Session = new System.Windows.Forms.TabPage();
+            this.button_Save = new System.Windows.Forms.Button();
             this.label_Technique = new System.Windows.Forms.Label();
             this.comboBox_Technique = new System.Windows.Forms.ComboBox();
             this.History = new System.Windows.Forms.TabPage();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            this.button_Save = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.Session.SuspendLayout();
             this.SuspendLayout();
@@ -121,6 +121,16 @@ namespace Workday
             this.Session.TabIndex = 0;
             this.Session.Text = "Session";
             // 
+            // button_Save
+            // 
+            this.button_Save.Location = new System.Drawing.Point(427, 117);
+            this.button_Save.Name = "button_Save";
+            this.button_Save.Size = new System.Drawing.Size(75, 23);
+            this.button_Save.TabIndex = 6;
+            this.button_Save.Text = "Save";
+            this.button_Save.UseVisualStyleBackColor = true;
+            this.button_Save.Click += new System.EventHandler(this.button_Save_Click);
+            // 
             // label_Technique
             // 
             this.label_Technique.AutoSize = true;
@@ -159,15 +169,6 @@ namespace Workday
             // backgroundWorker1
             // 
             this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
-            // 
-            // button_Save
-            // 
-            this.button_Save.Location = new System.Drawing.Point(514, 117);
-            this.button_Save.Name = "button_Save";
-            this.button_Save.Size = new System.Drawing.Size(75, 23);
-            this.button_Save.TabIndex = 6;
-            this.button_Save.Text = "Save";
-            this.button_Save.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
