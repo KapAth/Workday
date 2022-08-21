@@ -37,6 +37,7 @@ namespace Workday
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.Session = new System.Windows.Forms.TabPage();
+            this.label_SessionNo = new System.Windows.Forms.Label();
             this.label_BreakMin = new System.Windows.Forms.Label();
             this.label_WorkMin = new System.Windows.Forms.Label();
             this.textBox_BreakMin = new System.Windows.Forms.TextBox();
@@ -58,6 +59,7 @@ namespace Workday
             // 
             // label_Time
             // 
+            this.label_Time.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label_Time.AutoSize = true;
             this.label_Time.BackColor = System.Drawing.Color.Transparent;
             this.label_Time.Font = new System.Drawing.Font("Microsoft Sans Serif", 57.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
@@ -70,6 +72,7 @@ namespace Workday
             // 
             // button_Start
             // 
+            this.button_Start.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.button_Start.BackColor = System.Drawing.Color.Transparent;
             this.button_Start.Location = new System.Drawing.Point(181, 197);
             this.button_Start.Name = "button_Start";
@@ -81,6 +84,7 @@ namespace Workday
             // 
             // button_Stop
             // 
+            this.button_Stop.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.button_Stop.Location = new System.Drawing.Point(296, 197);
             this.button_Stop.Name = "button_Stop";
             this.button_Stop.Size = new System.Drawing.Size(89, 31);
@@ -91,6 +95,7 @@ namespace Workday
             // 
             // button_Reset
             // 
+            this.button_Reset.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.button_Reset.Location = new System.Drawing.Point(415, 197);
             this.button_Reset.Name = "button_Reset";
             this.button_Reset.Size = new System.Drawing.Size(89, 31);
@@ -119,6 +124,7 @@ namespace Workday
             // Session
             // 
             this.Session.BackColor = System.Drawing.Color.White;
+            this.Session.Controls.Add(this.label_SessionNo);
             this.Session.Controls.Add(this.label_BreakMin);
             this.Session.Controls.Add(this.label_WorkMin);
             this.Session.Controls.Add(this.textBox_BreakMin);
@@ -140,6 +146,18 @@ namespace Workday
             this.Session.Text = "Session";
             this.Session.Paint += new System.Windows.Forms.PaintEventHandler(this.Session_Paint);
             this.Session.Resize += new System.EventHandler(this.Session_Resize);
+            // 
+            // label_SessionNo
+            // 
+            this.label_SessionNo.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.label_SessionNo.AutoSize = true;
+            this.label_SessionNo.BackColor = System.Drawing.Color.Transparent;
+            this.label_SessionNo.Location = new System.Drawing.Point(377, 60);
+            this.label_SessionNo.Name = "label_SessionNo";
+            this.label_SessionNo.Size = new System.Drawing.Size(47, 13);
+            this.label_SessionNo.TabIndex = 12;
+            this.label_SessionNo.Text = "Session ";
+            this.label_SessionNo.Visible = false;
             // 
             // label_BreakMin
             // 
@@ -183,6 +201,7 @@ namespace Workday
             // 
             // progressBar1
             // 
+            this.progressBar1.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.progressBar1.Location = new System.Drawing.Point(258, 169);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(366, 13);
@@ -190,6 +209,7 @@ namespace Workday
             // 
             // label_break
             // 
+            this.label_break.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label_break.AutoSize = true;
             this.label_break.BackColor = System.Drawing.Color.Transparent;
             this.label_break.Location = new System.Drawing.Point(189, 169);
@@ -200,6 +220,7 @@ namespace Workday
             // 
             // button_Save
             // 
+            this.button_Save.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.button_Save.Location = new System.Drawing.Point(535, 197);
             this.button_Save.Name = "button_Save";
             this.button_Save.Size = new System.Drawing.Size(89, 31);
@@ -247,10 +268,20 @@ namespace Workday
             // 
             // dataGridView1
             // 
+            this.dataGridView1.AllowUserToAddRows = false;
+            this.dataGridView1.AllowUserToDeleteRows = false;
+            this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dataGridView1.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridView1.EnableHeadersVisualStyles = false;
             this.dataGridView1.Location = new System.Drawing.Point(3, 3);
+            this.dataGridView1.MultiSelect = false;
             this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
+            this.dataGridView1.RowHeadersVisible = false;
+            this.dataGridView1.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
+            this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView1.Size = new System.Drawing.Size(827, 339);
             this.dataGridView1.TabIndex = 0;
             // 
@@ -307,6 +338,7 @@ namespace Workday
         private System.Windows.Forms.Label label_BreakMin;
         private System.Windows.Forms.Label label_WorkMin;
         private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.Label label_SessionNo;
     }
 }
 

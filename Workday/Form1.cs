@@ -12,6 +12,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
 using System.Xml.Linq;
 
 ///  COLOR
@@ -38,9 +39,23 @@ namespace Workday
       //  TimeSpan ts = new TimeSpan();
         TimeSpan tsRemainingTime;
         private bool gridInitialized = false;
+        
+
         public static Form _frmSave;
         public static string xxx = "";
+        public static string techniqueStr= "";
+        public static int sessionNo = 0;
 
+        public struct history
+        {
+            public string ID { get; set; }
+            public  string totalTime { get; set; }
+            public  string title { get; set; }
+            public  string technique { get; set; }
+            public  string remarks { get; set; }
+            public  DateTime date { get; set; }
+            public  string sessions { get; set; }
+        }
 
         public Form1()
         {
@@ -81,7 +96,7 @@ namespace Workday
         {
             if (comboBox_Technique.Text == "Custom" && (string.IsNullOrEmpty(textBox_WorkMin.Text) || string.IsNullOrEmpty(textBox_BreakMin.Text)))
             {
-                MessageBox.Show("Please work time and break time to start", "Workday", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Please set work time and break time to start", "Workday", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             else if (!breakMode && comboBox_Technique.Text == "Custom" && (!string.IsNullOrEmpty(textBox_WorkMin.Text) || !string.IsNullOrEmpty(textBox_BreakMin.Text)))
@@ -89,6 +104,7 @@ namespace Workday
                 TextBoxCustomMinutesEnable(false);
                 workTime = Convert.ToInt32(textBox_WorkMin.Text);
                 breakMin = Convert.ToInt32(textBox_BreakMin.Text);
+                techniqueStr =textBox_WorkMin.Text+ "-"+textBox_BreakMin.Text;
                 nextBreak = workTime;
                 tsRemainingTime = new TimeSpan(0, breakMin, 1);
 
@@ -109,6 +125,15 @@ namespace Workday
                 stop = false;
                 stopwatchBreak.Start();
                 timer2.Start();
+            }
+            if(label_SessionNo.Visible== false)
+            {
+                label_SessionNo.Visible = true;
+            }
+            if (sessionNo == 0)
+            {
+                label_SessionNo.Text = "Session 1";
+                sessionNo = 1;
             }
 
 
@@ -162,6 +187,8 @@ namespace Workday
 
 
             }
+            label_SessionNo.Visible = false;
+            sessionNo = 0;
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -232,6 +259,8 @@ namespace Workday
             label_break.Visible = false;
             progressBar1.Visible = false;
             breakMode = false;
+            sessionNo++;
+            label_SessionNo.Text = "Session " + sessionNo;
         }
 
       
@@ -328,6 +357,7 @@ namespace Workday
                 breakMin = 10;
                 nextBreak = 50;
                 CustomTextBoxVisible(false);
+                techniqueStr = "50-10";
             }
             else if (comboBox_Technique.Text == "45 min work - 15 min break")
             {
@@ -335,6 +365,7 @@ namespace Workday
                 breakMin = 15;
                 nextBreak = 45;
                 CustomTextBoxVisible(false);
+                techniqueStr = "45-15";
             }
             else if (comboBox_Technique.Text == "30 min work - 10 min break")
             {
@@ -342,6 +373,7 @@ namespace Workday
                 breakMin = 10;
                 nextBreak = 30;
                 CustomTextBoxVisible(false);
+                techniqueStr = "30-10";
             }
             else if (comboBox_Technique.Text == "20 min work - 5 min break")
             {
@@ -349,11 +381,13 @@ namespace Workday
                 breakMin = 5;
                 nextBreak = 20;
                 CustomTextBoxVisible(false);
+                techniqueStr = "20-5";
             }
             else if(comboBox_Technique.Text == "None")
             {
                 breakMin = 0;
                 CustomTextBoxVisible(false);
+                techniqueStr = "None";
             }
             else if(comboBox_Technique.Text == "Custom")
             {
@@ -384,8 +418,11 @@ namespace Workday
                             stopwatchBreak.Stop();
                             timer2.Stop();
                             stop = true;
+                            
+                            
 
                         }
+                        button_Start.Enabled = true;
                     }
                 }
 
@@ -507,30 +544,173 @@ namespace Workday
         private void ReloadGrid()
         {
             InitializeGrid();
+            LoadGridData();
         }
+        private void LoadGridData()
+        {
+            try
+            { 
+              
+                
+                XmlDocument doc = new XmlDocument();
+                doc.Load("History.xml");
+                XmlElement root = doc.DocumentElement;
+                XmlNodeList nodes = root.SelectNodes("Session");
 
+                List<history> myHistoryList = new List<history>();
+               
+
+                foreach (XmlNode node in nodes)
+                {
+                    var myHistory = new history();
+                    //DataGridViewRow row = new DataGridViewRow();
+                    //row.CreateCells(dataGridView1);
+
+                    //string ID = "";
+                    //string totalTime = "";
+                    //string title = "";
+                    //string technique = "";
+                    //string remarks = "";
+                    //string date = "";
+                    //string sessions = "";
+
+                    foreach (XmlNode childNode in node.ChildNodes)
+                    {
+                        if (childNode.Name == "ID")
+                        {
+                       myHistory.ID = childNode.InnerText;
+                        }
+                        else if (childNode.Name == "TotalTime")
+                        {
+                          myHistory.totalTime = childNode.InnerText;
+                        }
+                        else if (childNode.Name == "Title")
+                        {
+                           myHistory.title = childNode.InnerText;
+                        }
+                        else if (childNode.Name == "Technique")
+                        {
+                          myHistory.technique = childNode.InnerText;
+                        }
+                        else if (childNode.Name == "Remarks")
+                        {
+                           myHistory.remarks = childNode.InnerText;
+                        }
+                        else if (childNode.Name == "Date")
+                        {
+                          myHistory.date =Convert.ToDateTime( childNode.InnerText);
+                        }
+                        else if (childNode.Name == "Sessions")
+                        {
+                           myHistory.sessions = childNode.InnerText;
+                        }
+                        
+                    }
+                    //appear only the first words in datagrid
+                    //if (myHistory.remarks.Length > 50)
+                    //{
+                    //    myHistory.remarks = myHistory.remarks.Substring(0, 50);
+                    //}
+
+                    //sort by date
+                    myHistoryList.Add(myHistory);
+                   
+                    //try { row.Cells[0].Value = ID.Trim(); } catch { }
+                    //try { row.Cells[1].Value = title.Trim(); } catch { }
+                    //try { row.Cells[2].Value = totalTime.Trim(); } catch { }
+                    //try { row.Cells[3].Value = date.Trim(); } catch { }
+                    //try { row.Cells[4].Value = technique.Trim(); } catch { }
+                    //try { row.Cells[5].Value = sessions.Trim(); } catch { }
+                    //try { row.Cells[6].Value = remarks.Trim(); } catch { }
+                    //try { dataGridView1.Rows.Add(row); } catch { }
+                   // row.Dispose();
+
+                }
+                
+                myHistoryList.Sort((s1, s2) => s1.date.CompareTo(s2.date));
+                myHistoryList.Reverse();
+
+                for (int i = 0; i < myHistoryList.Count; i++)
+                {
+                    DataGridViewRow row = new DataGridViewRow();
+                    row.CreateCells(dataGridView1);
+                    try { row.Cells[0].Value = myHistoryList[i].ID.Trim(); } catch { }
+                    try { row.Cells[1].Value = myHistoryList[i].title.Trim(); } catch { }
+                    try { row.Cells[2].Value = myHistoryList[i].totalTime.Trim(); } catch { }
+                    try { row.Cells[3].Value = myHistoryList[i].date; } catch { }
+                    try { row.Cells[4].Value = myHistoryList[i].technique.Trim(); } catch { row.Cells[4].Value = ""; }
+                    try { row.Cells[5].Value = myHistoryList[i].sessions.Trim(); } catch { row.Cells[5].Value = ""; }
+                    try { row.Cells[6].Value = myHistoryList[i].remarks.Trim(); } catch { row.Cells[6].Value = ""; }
+                    try { dataGridView1.Rows.Add(row); } catch { }
+                    row.Dispose();
+
+                }
+                try { dataGridView1.Columns[0].Visible = false; } catch { }
+                // dataGridView1.Columns["Date"].DefaultCellStyle.Format = "dd.MM.yyyy";
+                //this.dataGridView1.Sort(this.dataGridView1.Columns["Date"], ListSortDirection.Ascending);
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show("LoadGridData: " + ex.Message, "WorkDay", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
         private void InitializeGrid()
         {
-            dataGridView1.Rows.Clear();
-            if (!gridInitialized)
+            try
             {
-                DataGridViewColumn column1 = new DataGridViewTextBoxColumn();
-                column1.DataPropertyName = "Title";
-                column1.Name = "Title";
-                dataGridView1.Columns.Add(column1);
+                dataGridView1.Rows.Clear();
+                if (!gridInitialized)
+                {
+                    DataGridViewColumn column0 = new DataGridViewTextBoxColumn();
+                    column0.DataPropertyName = "ID";
+                    column0.Name = "ID";
+                    dataGridView1.Columns.Add(column0);
 
-                DataGridViewColumn column2 = new DataGridViewTextBoxColumn();
-                column2.DataPropertyName = "Total Time";
-                column2.Name = "Total Time";
-                dataGridView1.Columns.Add(column2);
+                    DataGridViewColumn column1 = new DataGridViewTextBoxColumn();
+                    column1.DataPropertyName = "Title";
+                    column1.Name = "Title";
+                    dataGridView1.Columns.Add(column1);
 
-                DataGridViewColumn column3 = new DataGridViewTextBoxColumn();
-                column3.DataPropertyName = "Remarks";
-                column3.Name = "Remarks";
-                dataGridView1.Columns.Add(column3);
+                    DataGridViewColumn column2 = new DataGridViewTextBoxColumn();
+                    column2.DataPropertyName = "Total Time";
+                    column2.Name = "Total Time";
+                    dataGridView1.Columns.Add(column2);
+
+                    DataGridViewColumn column3 = new DataGridViewTextBoxColumn();
+                    column3.DataPropertyName = "Date";
+                    column3.Name = "Date";
+                    dataGridView1.Columns.Add(column3);
+
+                    DataGridViewColumn column4 = new DataGridViewTextBoxColumn();
+                    column4.DataPropertyName = "Technique";
+                    column4.Name = "Technique";
+                    dataGridView1.Columns.Add(column4);
+
+                    DataGridViewColumn column5 = new DataGridViewTextBoxColumn();
+                    column5.DataPropertyName = "Sessions";
+                    column5.Name = "Sessions";
+                    dataGridView1.Columns.Add(column5);
+
+                    DataGridViewColumn column6 = new DataGridViewTextBoxColumn();
+                    column6.DataPropertyName = "Remarks";
+                    column6.Name = "Remarks";
+                    dataGridView1.Columns.Add(column6);
+
+
+                    gridInitialized = true;
+                    column0.Dispose();
+                    column1.Dispose();
+                    column2.Dispose();
+                    column3.Dispose();
+                }
 
             }
-           
+            catch (Exception ex)
+            {
+
+                MessageBox.Show("InitializeGrid: " + ex.Message, "Workday", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
             
         }
 
@@ -538,9 +718,11 @@ namespace Workday
         {
             if(tabControl1.SelectedTab == History)
             {
-               
+                ReloadGrid();
 
             }
         }
     }
+
+   
 }

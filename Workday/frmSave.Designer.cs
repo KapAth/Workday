@@ -99,11 +99,13 @@ namespace Workday
             this.button_close.TabIndex = 6;
             this.button_close.Text = "close";
             this.button_close.UseVisualStyleBackColor = true;
+            this.button_close.Click += new System.EventHandler(this.button_close_Click);
             // 
             // frmSave
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.BurlyWood;
             this.ClientSize = new System.Drawing.Size(298, 428);
             this.Controls.Add(this.button_close);
             this.Controls.Add(this.button_save);
@@ -113,7 +115,9 @@ namespace Workday
             this.Controls.Add(this.label_Title);
             this.Controls.Add(this.textBox_Title);
             this.Name = "frmSave";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Save";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmSave_FormClosed);
             this.VisibleChanged += new System.EventHandler(this.frmSave_VisibleChanged);
             this.ResumeLayout(false);
             this.PerformLayout();

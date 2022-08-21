@@ -32,30 +32,36 @@ namespace Workday
 
         private void button_save_Click(object sender, EventArgs e)
         {
+            WriteOrUpdateXML();
+        }
+
+        private void WriteOrUpdateXML()
+        {
             try
             {
                 if (File.Exists("History.xml"))
                 {
                     XDocument doc = XDocument.Load(@"History.xml");
                     XElement existingId;
-                    try
+                    try // check if id Exists
                     {
                         existingId = doc.Element("HISTORY").Elements("Session")
                                           .Where(idElement => idElement.Element("ID").Value == ID)
                                           .FirstOrDefault();
                     }
-                    catch {existingId = null;}
+                    catch { existingId = null; }
 
-                    if (existingId == null) // its not edit
+                    if (existingId == null) // its not edit, create new
                     {
                         string NewID = DateTime.Now.ToString("yyyyMMddHHmmss");
                         XElement newSession = doc.Element("HISTORY");
                         newSession.Add(new XElement("Session",
                                    new XElement("ID", NewID),
                                    new XElement("Title", textBox_Title.Text),
-                                   new XElement("Technique", textBox_Title.Text),
+                                   new XElement("Technique", Form1.techniqueStr),
                                    new XElement("Remarks", richTextBox_Remarks.Text),
                                    new XElement("Date", DateTime.Now.ToShortDateString()),
+                                   new XElement("Sessions", Form1.sessionNo),
                                    new XElement("TotalTime", TotalTime)));
                         doc.Save("History.xml");
                     }
@@ -67,10 +73,22 @@ namespace Workday
                         existingId.Element("Date").Value = DateTime.Now.ToShortDateString();
                         doc.Save("History.xml");
                     }
+                    MessageBox.Show("Saved Succefully!", "WorkDay");
                 }
+
 
             }
             catch (Exception ex) { string x = ex.Message; }
+        }
+
+        private void button_close_Click(object sender, EventArgs e)
+        {
+            try { this.Close(); } catch { }
+        }
+
+        private void frmSave_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            try { Form1._frmSave = null; } catch { }
         }
     }
 }
