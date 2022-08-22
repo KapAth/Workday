@@ -89,6 +89,7 @@ namespace Workday
             TransparetBackground(button_Reset);
             TransparetBackground(button_Stop);
             TransparetBackground(button_Save);
+            TransparetBackground(dataGridView1);
             
         }
 
@@ -264,53 +265,7 @@ namespace Workday
         }
 
       
-        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
-        {
-
-                this.Invoke(new MethodInvoker(delegate {
-
-                    //if(this.WindowState == FormWindowState.Minimized)
-                    //{
-                    //    this.WindowState = FormWindowState.Normal;
-                    //}
-                    //tabControl1.SelectTab("Session");
-                    //label_break.Visible = true;
-                    //progressBar1.Visible = true;
-                    //progressBar1.Maximum = breakMin * 60*1000;
-                    //progressBar1.Value = breakMin *60* 1000;
-                   
-                   
-                }));
-
-                System.Threading.Thread.Sleep(TimeSpan.FromMinutes(breakMin));
-
-            while (breakMode)//if stopped while break needs extra time
-            {
-                System.Threading.Thread.Sleep(TimeSpan.FromMinutes(1000));
-            }
-
-                this.Invoke(new MethodInvoker(delegate
-                {
-                    //if (this.WindowState == FormWindowState.Minimized)
-                    //{
-                    //    this.WindowState = FormWindowState.Normal;
-                    //}
-                    //timer2.Stop();
-                    //stopwatchBreak.Reset();
-                    //progressBar1.Value = 0;
-
-                    //tabControl1.SelectTab("Session");
-                    //label_break.Visible = false ;
-                    //progressBar1.Visible = false;
-                    
-                    
-
-                    // tabControl1.SelectedTab.BackColor = Color.Green;
-                }));
-            //breakMode = false;
-
-        }
-
+      
         private void TextBoxCustomMinutesEnable(bool enable)
         {
             if (comboBox_Technique.Text == "Custom")
@@ -460,7 +415,19 @@ namespace Workday
 
         private void Session_Paint(object sender, PaintEventArgs e)
         {
-           using (LinearGradientBrush brush = new LinearGradientBrush(this.ClientRectangle,
+            PaintGradient(sender,e);
+           //using (LinearGradientBrush brush = new LinearGradientBrush(this.ClientRectangle,
+           //                                                    Color.White,
+           //                                                    Color.BurlyWood,
+           //                                                    90F))
+           // {
+           //     e.Graphics.FillRectangle(brush, this.ClientRectangle);
+           // }
+        }
+
+        private void PaintGradient(object sender, PaintEventArgs e)
+        {
+            using (LinearGradientBrush brush = new LinearGradientBrush(this.ClientRectangle,
                                                                Color.White,
                                                                Color.BurlyWood,
                                                                90F))
@@ -637,7 +604,7 @@ namespace Workday
                     try { row.Cells[0].Value = myHistoryList[i].ID.Trim(); } catch { }
                     try { row.Cells[1].Value = myHistoryList[i].title.Trim(); } catch { }
                     try { row.Cells[2].Value = myHistoryList[i].totalTime.Trim(); } catch { }
-                    try { row.Cells[3].Value = myHistoryList[i].date; } catch { }
+                    try { row.Cells[3].Value = myHistoryList[i].date.ToShortDateString(); } catch { }
                     try { row.Cells[4].Value = myHistoryList[i].technique.Trim(); } catch { row.Cells[4].Value = ""; }
                     try { row.Cells[5].Value = myHistoryList[i].sessions.Trim(); } catch { row.Cells[5].Value = ""; }
                     try { row.Cells[6].Value = myHistoryList[i].remarks.Trim(); } catch { row.Cells[6].Value = ""; }
@@ -721,6 +688,11 @@ namespace Workday
                 ReloadGrid();
 
             }
+        }
+
+        private void History_Paint(object sender, PaintEventArgs e)
+        {
+            PaintGradient(sender, e);
         }
     }
 

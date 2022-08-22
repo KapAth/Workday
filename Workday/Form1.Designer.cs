@@ -49,7 +49,6 @@ namespace Workday
             this.comboBox_Technique = new System.Windows.Forms.ComboBox();
             this.History = new System.Windows.Forms.TabPage();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.tabControl1.SuspendLayout();
             this.Session.SuspendLayout();
@@ -257,6 +256,7 @@ namespace Workday
             // 
             // History
             // 
+            this.History.BackColor = System.Drawing.Color.LightGray;
             this.History.Controls.Add(this.dataGridView1);
             this.History.Location = new System.Drawing.Point(4, 22);
             this.History.Name = "History";
@@ -264,7 +264,7 @@ namespace Workday
             this.History.Size = new System.Drawing.Size(833, 345);
             this.History.TabIndex = 1;
             this.History.Text = "History";
-            this.History.UseVisualStyleBackColor = true;
+            this.History.Paint += new System.Windows.Forms.PaintEventHandler(this.History_Paint);
             // 
             // dataGridView1
             // 
@@ -272,6 +272,7 @@ namespace Workday
             this.dataGridView1.AllowUserToDeleteRows = false;
             this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridView1.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+            this.dataGridView1.BackgroundColor = System.Drawing.Color.WhiteSmoke;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.EnableHeadersVisualStyles = false;
@@ -284,10 +285,6 @@ namespace Workday
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView1.Size = new System.Drawing.Size(827, 339);
             this.dataGridView1.TabIndex = 0;
-            // 
-            // backgroundWorker1
-            // 
-            this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
             // 
             // timer2
             // 
@@ -328,7 +325,6 @@ namespace Workday
         private System.Windows.Forms.TabPage History;
         private System.Windows.Forms.Label label_Technique;
         private System.Windows.Forms.ComboBox comboBox_Technique;
-        private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.Button button_Save;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Label label_break;
