@@ -48,6 +48,7 @@ namespace Workday
             // label_Title
             // 
             this.label_Title.AutoSize = true;
+            this.label_Title.BackColor = System.Drawing.Color.Transparent;
             this.label_Title.Location = new System.Drawing.Point(13, 59);
             this.label_Title.Name = "label_Title";
             this.label_Title.Size = new System.Drawing.Size(27, 13);
@@ -57,6 +58,7 @@ namespace Workday
             // label_Remarks
             // 
             this.label_Remarks.AutoSize = true;
+            this.label_Remarks.BackColor = System.Drawing.Color.Transparent;
             this.label_Remarks.Location = new System.Drawing.Point(9, 127);
             this.label_Remarks.Name = "label_Remarks";
             this.label_Remarks.Size = new System.Drawing.Size(49, 13);
@@ -74,6 +76,7 @@ namespace Workday
             // label_Total_Time
             // 
             this.label_Total_Time.AutoSize = true;
+            this.label_Total_Time.BackColor = System.Drawing.Color.Transparent;
             this.label_Total_Time.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
             this.label_Total_Time.Location = new System.Drawing.Point(13, 9);
             this.label_Total_Time.Name = "label_Total_Time";
@@ -119,6 +122,8 @@ namespace Workday
             this.Text = "Save";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmSave_FormClosed);
             this.VisibleChanged += new System.EventHandler(this.frmSave_VisibleChanged);
+            this.Paint += new System.Windows.Forms.PaintEventHandler(this.frmSave_Paint);
+            this.Resize += new System.EventHandler(this.frmSave_Resize);
             this.ResumeLayout(false);
             this.PerformLayout();
 

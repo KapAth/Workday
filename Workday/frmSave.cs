@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -17,6 +18,7 @@ namespace Workday
         private Form _frm;
         private string TotalTime = "";
         private string ID = "";
+        
         public frmSave(Form frm)
         {
             _frm = frm;
@@ -26,8 +28,19 @@ namespace Workday
 
         private void frmSave_VisibleChanged(object sender, EventArgs e)
         {
-          TotalTime= string.Format("{0:hh\\:mm\\:ss}", Form1.stopWatch.Elapsed);
-            label_Total_Time.Text = "Total Time: "+TotalTime;
+            if (Form1.edit)
+            {
+                textBox_Title.Text = Form1.title;
+                label_Total_Time.Text = "Total Time: " + Form1.totalTime;
+                richTextBox_Remarks.Text = Form1.remarks;
+            }
+            else
+            {
+                TotalTime = string.Format("{0:hh\\:mm\\:ss}", Form1.stopWatch.Elapsed);
+                label_Total_Time.Text = "Total Time: " + TotalTime;
+            }
+
+          
         }
 
         private void button_save_Click(object sender, EventArgs e)
@@ -46,7 +59,7 @@ namespace Workday
                     try // check if id Exists
                     {
                         existingId = doc.Element("HISTORY").Elements("Session")
-                                          .Where(idElement => idElement.Element("ID").Value == ID)
+                                          .Where(idElement => idElement.Element("ID").Value == Form1.SessionID)
                                           .FirstOrDefault();
                     }
                     catch { existingId = null; }
@@ -72,13 +85,24 @@ namespace Workday
                         existingId.Element("TotalTime").Value = richTextBox_Remarks.Text;
                         existingId.Element("Date").Value = DateTime.Now.ToShortDateString();
                         doc.Save("History.xml");
+
+                        Form1.SessionID = "";
+                        Form1.edit = false;
+                        Form1 objMain = (Form1)_frm;
+                        objMain.ReloadGrid();
+
+
                     }
                     MessageBox.Show("Saved Succefully!", "WorkDay");
                 }
 
 
             }
-            catch (Exception ex) { string x = ex.Message; }
+            catch (Exception ex)
+            {
+                //string x = ex.Message;
+                MessageBox.Show("WriteOrUpdateXML: " + ex.Message);
+            }
         }
 
         private void button_close_Click(object sender, EventArgs e)
@@ -89,6 +113,22 @@ namespace Workday
         private void frmSave_FormClosed(object sender, FormClosedEventArgs e)
         {
             try { Form1._frmSave = null; } catch { }
+        }
+
+        private void frmSave_Paint(object sender, PaintEventArgs e)
+        {
+            using (LinearGradientBrush brush = new LinearGradientBrush(this.ClientRectangle,
+                                                              Color.White,
+                                                              Color.BurlyWood,
+                                                              90F))
+            {
+                e.Graphics.FillRectangle(brush, this.ClientRectangle);
+            }
+        }
+
+        private void frmSave_Resize(object sender, EventArgs e)
+        {
+            this.Invalidate();
         }
     }
 }

@@ -30,6 +30,8 @@ namespace Workday
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.label_Time = new System.Windows.Forms.Label();
             this.button_Start = new System.Windows.Forms.Button();
             this.button_Stop = new System.Windows.Forms.Button();
@@ -50,6 +52,7 @@ namespace Workday
             this.History = new System.Windows.Forms.TabPage();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.timer2 = new System.Windows.Forms.Timer(this.components);
+            this.ToDo = new System.Windows.Forms.TabPage();
             this.tabControl1.SuspendLayout();
             this.Session.SuspendLayout();
             this.History.SuspendLayout();
@@ -112,6 +115,7 @@ namespace Workday
             // 
             this.tabControl1.Controls.Add(this.Session);
             this.tabControl1.Controls.Add(this.History);
+            this.tabControl1.Controls.Add(this.ToDo);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
@@ -273,9 +277,26 @@ namespace Workday
             this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridView1.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dataGridView1.BackgroundColor = System.Drawing.Color.WhiteSmoke;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.Transparent;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.Tan;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle2;
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.EnableHeadersVisualStyles = false;
+            this.dataGridView1.GridColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.dataGridView1.Location = new System.Drawing.Point(3, 3);
             this.dataGridView1.MultiSelect = false;
             this.dataGridView1.Name = "dataGridView1";
@@ -285,11 +306,21 @@ namespace Workday
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView1.Size = new System.Drawing.Size(827, 339);
             this.dataGridView1.TabIndex = 0;
+            this.dataGridView1.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellDoubleClick);
             // 
             // timer2
             // 
             this.timer2.Interval = 300;
             this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
+            // 
+            // ToDo
+            // 
+            this.ToDo.Location = new System.Drawing.Point(4, 22);
+            this.ToDo.Name = "ToDo";
+            this.ToDo.Size = new System.Drawing.Size(833, 345);
+            this.ToDo.TabIndex = 2;
+            this.ToDo.Text = "To Do";
+            this.ToDo.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -335,6 +366,7 @@ namespace Workday
         private System.Windows.Forms.Label label_WorkMin;
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Label label_SessionNo;
+        private System.Windows.Forms.TabPage ToDo;
     }
 }
 

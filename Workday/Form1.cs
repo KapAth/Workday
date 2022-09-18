@@ -45,7 +45,7 @@ namespace Workday
         public static string xxx = "";
         public static string techniqueStr= "";
         public static int sessionNo = 0;
-
+        public static bool edit = false;
         public struct history
         {
             public string ID { get; set; }
@@ -56,41 +56,51 @@ namespace Workday
             public  DateTime date { get; set; }
             public  string sessions { get; set; }
         }
+        public static string SessionID;
+        public static string totalTime;
+        public static string title;
+        public static string technique;
+        public static string remarks;
+        public static string date;
+        public static string sessions;
 
+
+        //public static Form1 _frmMain;
         public Form1()
         {
             InitializeComponent();
-            
+            //_frmMain = this;
+
 
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            stopWatch = new Stopwatch();
-            if (!File.Exists("History.xml"))
+            try
             {
-                new XDocument(  
-                    new XElement("HISTORY","")).Save("History.xml");
-
-
-                //new XDocument(
-                //   new XElement("HISTORY",
-                //   new XElement("Session", ""),
-                //   new XElement("Time", ""),
-                //   new XElement("Remarks", ""),
-                //   new XElement("Date", ""))).Save("History.xml");
+                stopWatch = new Stopwatch();
+                if (!File.Exists("History.xml"))
+                {
+                    new XDocument(
+                        new XElement("HISTORY", "")).Save("History.xml");
+                }
+                button_Stop.Enabled = false;
+                button_Reset.Enabled = false;
+                label_break.Visible = false;
+                progressBar1.Visible = false;
+                TransparetBackground(button_Start);
+                TransparetBackground(comboBox_Technique);
+                TransparetBackground(button_Reset);
+                TransparetBackground(button_Stop);
+                TransparetBackground(button_Save);
+                TransparetBackground(dataGridView1);
             }
-            button_Stop.Enabled = false;
-            button_Reset.Enabled = false;
-            label_break.Visible = false;
-            progressBar1.Visible = false;
-            TransparetBackground(button_Start);
-            TransparetBackground(comboBox_Technique);
-            TransparetBackground(button_Reset);
-            TransparetBackground(button_Stop);
-            TransparetBackground(button_Save);
-            TransparetBackground(dataGridView1);
-            
+            catch(Exception ex)
+            {
+                MessageBox.Show("Form Load: "+ex.Message, "Workday", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            }
+
         }
 
         private void button_Start_Click(object sender, EventArgs e)
@@ -118,10 +128,10 @@ namespace Workday
             button_Start.Enabled = false;
             button_Stop.Enabled = true;
             button_Reset.Enabled = true;
-           // tabControl1.SelectedTab.BackColor = Color.Green;
+           
             comboBox_Technique.Enabled = false;
 
-            if (breakMode)//if started after stop while in break
+            if (breakMode)//if started after a stop while in break
             {
                 stop = false;
                 stopwatchBreak.Start();
@@ -200,16 +210,11 @@ namespace Workday
             int totalMinutes = (int)stopWatch.Elapsed.TotalMinutes;
             if ( breakMin != 0 && totalMinutes != 0 && (totalMinutes % nextBreak==0)  && !breakMode)
             {
-
-                //tsRemainingTime = new TimeSpan(0, breakMin, 0);
-
-                //     stopwatchBreak = new Stopwatch();
-                   
                     stopwatchBreak.Start();
                     timer2.Start();
 
                 StartBreak();
-                //backgroundWorker1.RunWorkerAsync();
+                
                 File.AppendAllText("BREAKS.txt", "break: " + nextBreak + " TotalMinutes: " + totalMinutes + Environment.NewLine);
 
                 nextBreak = totalMinutes + workTime + breakMin;
@@ -231,10 +236,15 @@ namespace Workday
         }
         private void BringUpWindow()
         {
-            if (this.WindowState == FormWindowState.Minimized)
+            try
             {
-                this.WindowState = FormWindowState.Normal;
+                if (this.WindowState == FormWindowState.Minimized)
+                {
+                    this.WindowState = FormWindowState.Normal;
+                }
+                try { this.Activate(); } catch { }
             }
+            catch { }
         }
         private void StartBreak()
         {
@@ -410,19 +420,13 @@ namespace Workday
 
         private void Form1_Resize(object sender, EventArgs e)
         {
-         //   this.Invalidate();
+        
         }
 
         private void Session_Paint(object sender, PaintEventArgs e)
         {
             PaintGradient(sender,e);
-           //using (LinearGradientBrush brush = new LinearGradientBrush(this.ClientRectangle,
-           //                                                    Color.White,
-           //                                                    Color.BurlyWood,
-           //                                                    90F))
-           // {
-           //     e.Graphics.FillRectangle(brush, this.ClientRectangle);
-           // }
+         
         }
 
         private void PaintGradient(object sender, PaintEventArgs e)
@@ -502,13 +506,13 @@ namespace Workday
             {
                 if (!Regex.IsMatch(txtBox.Text, "^[1-9][0-9]*$") && !string.IsNullOrEmpty(txtBox.Text))
                 {
-                    MessageBox.Show("Please enter integer number with minimum value 1", "Workday", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Please enter an integer number with minimum value 1", "Workday", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     txtBox.Text = txtBox.Text.Remove(txtBox.Text.Length - 1);
                 }
             }
             catch { }
         }
-        private void ReloadGrid()
+        public void ReloadGrid()
         {
             InitializeGrid();
             LoadGridData();
@@ -530,16 +534,7 @@ namespace Workday
                 foreach (XmlNode node in nodes)
                 {
                     var myHistory = new history();
-                    //DataGridViewRow row = new DataGridViewRow();
-                    //row.CreateCells(dataGridView1);
-
-                    //string ID = "";
-                    //string totalTime = "";
-                    //string title = "";
-                    //string technique = "";
-                    //string remarks = "";
-                    //string date = "";
-                    //string sessions = "";
+                   
 
                     foreach (XmlNode childNode in node.ChildNodes)
                     {
@@ -579,7 +574,7 @@ namespace Workday
                     //    myHistory.remarks = myHistory.remarks.Substring(0, 50);
                     //}
 
-                    //sort by date
+                   
                     myHistoryList.Add(myHistory);
                    
                     //try { row.Cells[0].Value = ID.Trim(); } catch { }
@@ -594,6 +589,7 @@ namespace Workday
 
                 }
                 
+                //sort by date show latest on top
                 myHistoryList.Sort((s1, s2) => s1.date.CompareTo(s2.date));
                 myHistoryList.Reverse();
 
@@ -613,8 +609,8 @@ namespace Workday
 
                 }
                 try { dataGridView1.Columns[0].Visible = false; } catch { }
-                // dataGridView1.Columns["Date"].DefaultCellStyle.Format = "dd.MM.yyyy";
-                //this.dataGridView1.Sort(this.dataGridView1.Columns["Date"], ListSortDirection.Ascending);
+                dataGridView1.Refresh();
+                
             }
             catch (Exception ex)
             {
@@ -670,6 +666,12 @@ namespace Workday
                     column1.Dispose();
                     column2.Dispose();
                     column3.Dispose();
+                    dataGridView1.Columns["Date"].SortMode = DataGridViewColumnSortMode.NotSortable;
+                    dataGridView1.Columns["Total Time"].SortMode = DataGridViewColumnSortMode.NotSortable;
+                    dataGridView1.Columns["Title"].SortMode = DataGridViewColumnSortMode.NotSortable;
+                    dataGridView1.Columns["Technique"].SortMode = DataGridViewColumnSortMode.NotSortable;
+                    dataGridView1.Columns["Sessions"].SortMode = DataGridViewColumnSortMode.NotSortable;
+                    dataGridView1.Columns["Remarks"].SortMode = DataGridViewColumnSortMode.NotSortable;
                 }
 
             }
@@ -693,6 +695,88 @@ namespace Workday
         private void History_Paint(object sender, PaintEventArgs e)
         {
             PaintGradient(sender, e);
+        }
+
+        private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            // try { selectedRow = e.RowIndex; } catch { }
+            edit = true;
+            EditProfile(e.RowIndex);
+        }
+
+        private void EditProfile(int RowIndex)
+        {
+            try
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                if (RowIndex < 0)
+                {
+                    return;
+                    Cursor.Current = Cursors.Default;
+                }
+               if(FindSessionWithID(dataGridView1.Rows[RowIndex].Cells[0].Value.ToString()))
+                {
+                    if (_frmSave == null)
+                    {
+                        _frmSave = new frmSave(this);
+
+                        _frmSave.ShowDialog();
+                        Cursor.Current = Cursors.Default;
+                        //e GlobalVariables.fForm2.TopLevel = true;
+                    }
+                    else
+                    {
+
+                        MessageBox.Show("Please edit one session at a time", "WorkDay", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        Cursor.Current = Cursors.Default;
+                    }
+                }
+              
+               
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("EditProfile " + ex.Message.ToString());
+            }
+        }
+        public static Boolean FindSessionWithID(string ID)
+        {
+            try
+            {
+                XDocument doc = XDocument.Load(@"History.xml");
+
+                XElement existingId = doc.Element("HISTORY").Elements("Session")
+                       .Where(idElement => idElement.Element("ID").Value == ID)
+                       .FirstOrDefault();
+
+                if ((existingId == null))
+                {
+                    MessageBox.Show("FindSessionWithID: Session ID is empty or does not match with any session in the History.xml");
+                   
+                    return (false);
+                }
+                
+                SessionID = ID;
+
+                title = existingId.Element("Title").Value;
+                try { technique = existingId.Element("Technique").Value; } catch { technique = ""; }
+
+                
+                remarks = existingId.Element("Remarks").Value;
+               
+
+                date = existingId.Element("Date").Value;
+                
+
+                totalTime = existingId.Element("TotalTime").Value;
+               
+                return (true);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("FindSessionWithID: " + ex.Message);
+                return (false);
+            }
         }
     }
 
