@@ -66,10 +66,10 @@ namespace Workday
 
                     if (existingId == null) // its not edit, create new
                     {
-                        string NewID = DateTime.Now.ToString("yyyyMMddHHmmss");
+                       // string NewID = DateTime.Now.ToString("yyyyMMddHHmmss");
                         XElement newSession = doc.Element("HISTORY");
                         newSession.Add(new XElement("Session",
-                                   new XElement("ID", NewID),
+                                   new XElement("ID", Form1.SessionID),
                                    new XElement("Title", textBox_Title.Text),
                                    new XElement("Technique", Form1.techniqueStr),
                                    new XElement("Remarks", richTextBox_Remarks.Text),
@@ -82,11 +82,11 @@ namespace Workday
                     {
                         existingId.Element("Title").Value = textBox_Title.Text;
                         existingId.Element("Remarks").Value = richTextBox_Remarks.Text;
-                        existingId.Element("TotalTime").Value = richTextBox_Remarks.Text;
+                        existingId.Element("TotalTime").Value = TotalTime;
                         existingId.Element("Date").Value = DateTime.Now.ToShortDateString();
                         doc.Save("History.xml");
 
-                        Form1.SessionID = "";
+                      //  Form1.SessionID = "";
                         Form1.edit = false;
                         Form1 objMain = (Form1)_frm;
                         objMain.ReloadGrid();

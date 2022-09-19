@@ -36,7 +36,8 @@ namespace Workday
         private int nextBreak = 0;
         private static int workTime = 0;
         private bool stop = false;
-      //  TimeSpan ts = new TimeSpan();
+        private int selectedRow;
+        //  TimeSpan ts = new TimeSpan();
         TimeSpan tsRemainingTime;
         private bool gridInitialized = false;
         
@@ -46,6 +47,7 @@ namespace Workday
         public static string techniqueStr= "";
         public static int sessionNo = 0;
         public static bool edit = false;
+       // public static string newID;
         public struct history
         {
             public string ID { get; set; }
@@ -122,6 +124,13 @@ namespace Workday
                 stopwatchBreak = new Stopwatch();
             }
 
+            /*to get new ID in case of just started
+            or keep the same ID in case of saved 2 times during same session
+            ensures dublicates are not created in History.xml */
+            if (stopWatch.Elapsed.TotalSeconds == 0)
+            {
+                SessionID = DateTime.Now.ToString("yyyyMMddHHmmss");
+            }
             stopWatch.Start();
             
             timer1.Start();
@@ -420,7 +429,11 @@ namespace Workday
 
         private void Form1_Resize(object sender, EventArgs e)
         {
-        
+            if (tabControl1.SelectedTab == History)
+            {
+                dataGridView1.Refresh();
+
+            }
         }
 
         private void Session_Paint(object sender, PaintEventArgs e)
@@ -611,6 +624,8 @@ namespace Workday
                 try { dataGridView1.Columns[0].Visible = false; } catch { }
                 dataGridView1.Refresh();
                 
+               // dataGridView1.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.Fill);
+
             }
             catch (Exception ex)
             {
@@ -701,10 +716,10 @@ namespace Workday
         {
             // try { selectedRow = e.RowIndex; } catch { }
             edit = true;
-            EditProfile(e.RowIndex);
+            EditSession(e.RowIndex);
         }
 
-        private void EditProfile(int RowIndex)
+        private void EditSession(int RowIndex)
         {
             try
             {
@@ -736,7 +751,7 @@ namespace Workday
             }
             catch (Exception ex)
             {
-                MessageBox.Show("EditProfile " + ex.Message.ToString());
+                MessageBox.Show("EditSession " + ex.Message.ToString());
             }
         }
         public static Boolean FindSessionWithID(string ID)
@@ -777,6 +792,89 @@ namespace Workday
                 MessageBox.Show("FindSessionWithID: " + ex.Message);
                 return (false);
             }
+        }
+
+        private void dataGridView1_Resize(object sender, EventArgs e)
+        {
+            this.Refresh();
+        }
+
+        private void dataGridView1_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            try
+            {
+                //handle the row selection on right click
+                if (e.Button == MouseButtons.Right && e.RowIndex != -1)
+                {
+                    string ID = dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString();
+                    selectedRow = e.RowIndex;
+                    try
+                    {
+                        dataGridView1.CurrentCell = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                        // Can leave these here - doesn't hurt
+                        dataGridView1.Rows[e.RowIndex].Selected = true;
+
+                        dataGridView1.Focus();
+                        contextMenuStrip_History.Show(Cursor.Position.X, Cursor.Position.Y);
+                       
+                    }
+                    catch (Exception ex)
+                    {
+                       
+                        MessageBox.Show(ex.Message,"WorkDay", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+            catch { }
+        }
+
+        private void Edit_History_Click(object sender, EventArgs e)
+        {
+            edit = true;
+            EditSession(selectedRow); 
+        }
+
+        private void Delete_History_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                DeleteSelectedSession();
+                Cursor.Current = Cursors.Default;
+            }
+            catch(Exception ex)
+            {
+                Cursor.Current = Cursors.Default;
+                MessageBox.Show(ex.Message, "WorkDay", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        private void DeleteSelectedSession()
+        {
+            if (MessageBox.Show("Are you sure you want to delete the selected session ?", "WorkDay", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No) return;
+           // if (MessageBox.Show("Are you sure you want to delete the selected session ? (1/2)", "WorkDay", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No) return;
+           // if (MessageBox.Show("Are you really sure you want to delete the selected session ? (2/2)","WorkDay", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No) return;
+            string ID = "";
+            try
+            {
+                ID = dataGridView1.Rows[selectedRow].Cells[0].Value.ToString();
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Please select a valid profile", "WorkDay", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            try
+            {
+                XDocument doc = XDocument.Load(@"History.xml");
+
+                XElement existingId = doc.Element("HISTORY").Elements("Session")
+                       .Where(idElement => idElement.Element("ID").Value == ID)
+                       .FirstOrDefault();
+                existingId.Remove();
+                doc.Save("History.xml");
+            }
+            catch { }
+            ReloadGrid();
         }
     }
 

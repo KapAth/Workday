@@ -119,7 +119,7 @@ namespace Workday
             this.Controls.Add(this.textBox_Title);
             this.Name = "frmSave";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Save";
+            this.Text = "Save Session";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmSave_FormClosed);
             this.VisibleChanged += new System.EventHandler(this.frmSave_VisibleChanged);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.frmSave_Paint);
