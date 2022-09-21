@@ -28,27 +28,31 @@ namespace Workday
 
         private void frmSave_VisibleChanged(object sender, EventArgs e)
         {
-            if (Form1.edit)
+            try
             {
-                textBox_Title.Text = Form1.title;
-                label_Total_Time.Text = "Total Time: " + Form1.totalTime;
-                richTextBox_Remarks.Text = Form1.remarks;
-            }
-            else
-            {
-                TotalTime = string.Format("{0:hh\\:mm\\:ss}", Form1.stopWatch.Elapsed);
-                label_Total_Time.Text = "Total Time: " + TotalTime;
-            }
+                if (Form1.edit)
+                {
+                    textBox_Title.Text = Form1.title;
+                    label_Total_Time.Text = "Total Time: " + Form1.totalTime;
+                    richTextBox_Remarks.Text = Form1.remarks;
+                }
+                else
+                {
+                    TotalTime = string.Format("{0:hh\\:mm\\:ss}", Form1.stopWatch.Elapsed);
+                    label_Total_Time.Text = "Total Time: " + TotalTime;
+                }
 
+            }
+            catch { }
           
         }
 
         private void button_save_Click(object sender, EventArgs e)
         {
-            WriteOrUpdateXML();
+            WriteOrUpdateHistoryXML();
         }
 
-        private void WriteOrUpdateXML()
+        private void WriteOrUpdateHistoryXML()
         {
             try
             {
@@ -89,11 +93,12 @@ namespace Workday
                       //  Form1.SessionID = "";
                         Form1.edit = false;
                         Form1 objMain = (Form1)_frm;
-                        objMain.ReloadGrid();
+                        objMain.ReloadHistoryGrid();
 
 
                     }
-                    MessageBox.Show("Saved Succefully!", "WorkDay");
+                    this.Close();
+                    MessageBox.Show("Saved Succefully!", "Workday",MessageBoxButtons.OK,MessageBoxIcon.Information);
                 }
 
 
@@ -101,7 +106,7 @@ namespace Workday
             catch (Exception ex)
             {
                 //string x = ex.Message;
-                MessageBox.Show("WriteOrUpdateXML: " + ex.Message);
+                MessageBox.Show("WriteOrUpdateXML: " + ex.Message,"Workday",MessageBoxButtons.OK,MessageBoxIcon.Error);
             }
         }
 
@@ -117,18 +122,22 @@ namespace Workday
 
         private void frmSave_Paint(object sender, PaintEventArgs e)
         {
-            using (LinearGradientBrush brush = new LinearGradientBrush(this.ClientRectangle,
-                                                              Color.White,
-                                                              Color.BurlyWood,
-                                                              90F))
+            try
             {
-                e.Graphics.FillRectangle(brush, this.ClientRectangle);
+                using (LinearGradientBrush brush = new LinearGradientBrush(this.ClientRectangle,
+                                                                     Color.White,
+                                                                     Color.BurlyWood,
+                                                                     90F))
+                {
+                    e.Graphics.FillRectangle(brush, this.ClientRectangle);
+                }
             }
+            catch { }
         }
 
         private void frmSave_Resize(object sender, EventArgs e)
         {
-            this.Invalidate();
+            try { this.Invalidate(); } catch { }
         }
     }
 }

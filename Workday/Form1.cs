@@ -40,9 +40,11 @@ namespace Workday
         //  TimeSpan ts = new TimeSpan();
         TimeSpan tsRemainingTime;
         private bool gridInitialized = false;
+        private bool ToDogridInitialized = false;
         
 
         public static Form _frmSave;
+        public static Form _frmToDo;
         public static string xxx = "";
         public static string techniqueStr= "";
         public static int sessionNo = 0;
@@ -59,6 +61,7 @@ namespace Workday
             public  string sessions { get; set; }
         }
         public static string SessionID;
+        public static string ToDoID;
         public static string totalTime;
         public static string title;
         public static string technique;
@@ -429,11 +432,18 @@ namespace Workday
 
         private void Form1_Resize(object sender, EventArgs e)
         {
-            if (tabControl1.SelectedTab == History)
-            {
-                dataGridView1.Refresh();
-
-            }
+            //if (tabControl1.SelectedTab == History)
+            //{
+                //dataGridView1.Visible = false;
+                //ReloadGrid();
+                //dataGridView1.Visible = true;
+           // }
+           // else if (tabControl1.SelectedTab == ToDo)
+           // {
+                //dataGridView2.Visible = false;
+                //ReloadTodoGrid();
+                //dataGridView2.Visible = true;
+            //}
         }
 
         private void Session_Paint(object sender, PaintEventArgs e)
@@ -525,12 +535,12 @@ namespace Workday
             }
             catch { }
         }
-        public void ReloadGrid()
+        public void ReloadHistoryGrid()
         {
-            InitializeGrid();
-            LoadGridData();
+            InitializeHistoryGrid();
+            LoadHistoryGridData();
         }
-        private void LoadGridData()
+        private void LoadHistoryGridData()
         {
             try
             { 
@@ -623,6 +633,7 @@ namespace Workday
                 }
                 try { dataGridView1.Columns[0].Visible = false; } catch { }
                 dataGridView1.Refresh();
+                dataGridView1.Update();
                 
                // dataGridView1.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.Fill);
 
@@ -633,11 +644,13 @@ namespace Workday
                 MessageBox.Show("LoadGridData: " + ex.Message, "WorkDay", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        private void InitializeGrid()
+        private void InitializeHistoryGrid()
         {
             try
             {
                 dataGridView1.Rows.Clear();
+                dataGridView1.Refresh();
+                dataGridView1.Update();
                 if (!gridInitialized)
                 {
                     DataGridViewColumn column0 = new DataGridViewTextBoxColumn();
@@ -702,8 +715,18 @@ namespace Workday
         {
             if(tabControl1.SelectedTab == History)
             {
-                ReloadGrid();
+                ReloadHistoryGrid();
+                dataGridView1.Refresh();
 
+            }
+            else if(tabControl1.SelectedTab == ToDo)
+            {
+                ReloadTodoGrid();
+                dataGridView2.Refresh();
+            }
+            else if (tabControl1.SelectedTab == Notes)
+            {
+                LoadNotes();
             }
         }
 
@@ -741,9 +764,9 @@ namespace Workday
                     }
                     else
                     {
-
-                        MessageBox.Show("Please edit one session at a time", "WorkDay", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         Cursor.Current = Cursors.Default;
+                        MessageBox.Show("Please edit one session at a time", "WorkDay", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        
                     }
                 }
               
@@ -797,6 +820,7 @@ namespace Workday
         private void dataGridView1_Resize(object sender, EventArgs e)
         {
             this.Refresh();
+            this.Update();
         }
 
         private void dataGridView1_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
@@ -874,7 +898,182 @@ namespace Workday
                 doc.Save("History.xml");
             }
             catch { }
-            ReloadGrid();
+            ReloadHistoryGrid();
+        }
+
+        public void ReloadTodoGrid()
+        {
+            InitializeTodo();
+            LoadToDoGridData();
+        }
+        private void InitializeTodo()
+        {
+
+            dataGridView2.Rows.Clear();
+            dataGridView2.Refresh();
+            dataGridView2.Update();
+            if (!ToDogridInitialized)
+            {
+                
+                try
+                {
+                    DataGridViewColumn column0 = new DataGridViewTextBoxColumn();
+                    column0.DataPropertyName = "ID";
+                    column0.Name = "ID";
+                    dataGridView2.Columns.Add(column0);
+
+                    DataGridViewImageColumn ic = new DataGridViewImageColumn();
+                    ic.HeaderText = "Status";
+                    ic.Image = null;
+                    ic.Name = "cImg";
+                    ic.Width = 35;
+                    dataGridView2.Columns.Add(ic);
+
+                    DataGridViewColumn column2 = new DataGridViewTextBoxColumn();
+                    column2.DataPropertyName = "Title";
+                    column2.Name = "Title";
+                    dataGridView2.Columns.Add(column2);
+
+                    ToDogridInitialized = true;
+
+                    ic.Width = 35;
+                    ic.MinimumWidth = 20;
+
+                    ic.Dispose();
+                    column2.Dispose();
+                    column0.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("InitializeTodo: " + ex.Message, "Workday", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void LoadToDoGridData()
+        {
+            try
+            {
+
+                XmlDocument doc = new XmlDocument();
+                doc.Load("ToDoAndNotes.xml");
+                XmlElement root = doc.DocumentElement;
+                XmlNodeList nodes = root.SelectNodes("ToDo");
+
+
+                foreach (XmlNode node in nodes)
+                {
+                    // for each node make a new row
+                    DataGridViewRow row = new DataGridViewRow();
+                    row.CreateCells(dataGridView2);
+
+
+                    //for each childnode add values to the row
+                    foreach (XmlNode childNode in node.ChildNodes)
+                    {
+                        if (childNode.Name == "ID")
+                        {
+                            row.Cells[0].Value = childNode.InnerText;
+                        }
+                        else if (childNode.Name == "Status")
+                        {
+                            if (childNode.InnerText.ToLower() == "pending")
+                            {
+                                DataGridViewImageCell cell = row.Cells[1] as DataGridViewImageCell;
+                                cell.Value = (System.Drawing.Image)Properties.Resources.hourglass24;
+                            }
+                            else
+                            {
+                                DataGridViewImageCell cell = row.Cells[1] as DataGridViewImageCell;
+                                cell.Value = (System.Drawing.Image)Properties.Resources.check24;
+                            }
+                        }
+                        else if (childNode.Name == "Title")
+                        {
+                            row.Cells[2].Value = childNode.InnerText;
+                        }
+
+                        try { dataGridView2.Rows.Add(row); row.Dispose(); } catch { }
+                    }
+                    
+                    try { dataGridView2.Columns[0].Visible = false; } catch { }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("LoadToDoGridData: " + ex.Message, "Workday", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void Form1_ResizeEnd(object sender, EventArgs e)
+        {
+            try
+            {
+                if (tabControl1.SelectedTab == History)
+                {
+                    dataGridView1.Update();
+                    dataGridView1.Refresh();
+                }
+                else if (tabControl1.SelectedTab == ToDo)
+                {  
+                    dataGridView2.Update();
+                    dataGridView2.Refresh();
+                }
+            }
+            catch { }
+        }
+
+        public void LoadNotes()
+        {
+
+            try
+            {
+                XmlDocument doc = new XmlDocument();
+                doc.Load("ToDoAndNotes.xml");
+                XmlElement root = doc.DocumentElement;
+                // XmlNodeList nodes = root.SelectNodes("Notes");
+
+                try { richTextBox_Notes.Text = doc.DocumentElement["notes"].InnerText; } catch { richTextBox_Notes.Text = ""; }
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show("LoadNotes: " + ex.Message, "Workday", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void button_Add_Todo_Click(object sender, EventArgs e)
+        {
+
+            try
+            {
+               
+                Cursor.Current = Cursors.WaitCursor;
+                if (_frmToDo == null)
+                {
+                    _frmToDo = new frmToDo(this);
+
+                    _frmToDo.ShowDialog();
+                    Cursor.Current = Cursors.Default;
+
+                }
+                else
+                {
+
+                    _frmToDo.BringToFront();
+                    _frmToDo.WindowState = FormWindowState.Normal;
+                    MessageBox.Show("Please add one todo at a time", "Workday", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    Cursor.Current = Cursors.Default;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Button Add ToDo: " + ex.Message, "Workday", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                Cursor.Current = Cursors.Default;
+            }
+
+
         }
     }
 

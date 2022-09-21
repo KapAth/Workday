@@ -117,6 +117,9 @@ namespace Workday
             this.Controls.Add(this.label_Remarks);
             this.Controls.Add(this.label_Title);
             this.Controls.Add(this.textBox_Title);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "frmSave";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Save Session";

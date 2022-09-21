@@ -48,25 +48,28 @@ namespace Workday
             this.textBox_WorkMin = new System.Windows.Forms.TextBox();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.label_break = new System.Windows.Forms.Label();
-            this.button_Save = new System.Windows.Forms.Button();
             this.label_Technique = new System.Windows.Forms.Label();
             this.comboBox_Technique = new System.Windows.Forms.ComboBox();
             this.History = new System.Windows.Forms.TabPage();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.ToDo = new System.Windows.Forms.TabPage();
+            this.dataGridView2 = new System.Windows.Forms.DataGridView();
             this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStrip_History = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.button_Save = new System.Windows.Forms.Button();
+            this.Notes = new System.Windows.Forms.TabPage();
+            this.richTextBox_Notes = new System.Windows.Forms.RichTextBox();
+            this.button_Add_Todo = new System.Windows.Forms.Button();
             this.Edit_History = new System.Windows.Forms.ToolStripMenuItem();
             this.Delete_History = new System.Windows.Forms.ToolStripMenuItem();
-            this.dataGridView2 = new System.Windows.Forms.DataGridView();
-            this.button_Add_Todo = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.Session.SuspendLayout();
             this.History.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.ToDo.SuspendLayout();
-            this.contextMenuStrip_History.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
+            this.contextMenuStrip_History.SuspendLayout();
+            this.Notes.SuspendLayout();
             this.SuspendLayout();
             // 
             // label_Time
@@ -126,6 +129,7 @@ namespace Workday
             this.tabControl1.Controls.Add(this.Session);
             this.tabControl1.Controls.Add(this.History);
             this.tabControl1.Controls.Add(this.ToDo);
+            this.tabControl1.Controls.Add(this.Notes);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
@@ -231,17 +235,6 @@ namespace Workday
             this.label_break.TabIndex = 5;
             this.label_break.Text = "Break";
             // 
-            // button_Save
-            // 
-            this.button_Save.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.button_Save.Location = new System.Drawing.Point(535, 197);
-            this.button_Save.Name = "button_Save";
-            this.button_Save.Size = new System.Drawing.Size(89, 31);
-            this.button_Save.TabIndex = 6;
-            this.button_Save.Text = "Save";
-            this.button_Save.UseVisualStyleBackColor = true;
-            this.button_Save.Click += new System.EventHandler(this.button_Save_Click);
-            // 
             // label_Technique
             // 
             this.label_Technique.AutoSize = true;
@@ -332,39 +325,13 @@ namespace Workday
             this.ToDo.Text = "To Do";
             this.ToDo.UseVisualStyleBackColor = true;
             // 
-            // timer2
-            // 
-            this.timer2.Interval = 300;
-            this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
-            // 
-            // contextMenuStrip_History
-            // 
-            this.contextMenuStrip_History.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.Edit_History,
-            this.Delete_History});
-            this.contextMenuStrip_History.Name = "contextMenuStrip_History";
-            this.contextMenuStrip_History.Size = new System.Drawing.Size(108, 48);
-            // 
-            // Edit_History
-            // 
-            this.Edit_History.Image = global::Workday.Properties.Resources.pencil32;
-            this.Edit_History.Name = "Edit_History";
-            this.Edit_History.Size = new System.Drawing.Size(107, 22);
-            this.Edit_History.Text = "Edit";
-            this.Edit_History.Click += new System.EventHandler(this.Edit_History_Click);
-            // 
-            // Delete_History
-            // 
-            this.Delete_History.Image = global::Workday.Properties.Resources.trash;
-            this.Delete_History.Name = "Delete_History";
-            this.Delete_History.Size = new System.Drawing.Size(107, 22);
-            this.Delete_History.Text = "Delete";
-            this.Delete_History.Click += new System.EventHandler(this.Delete_History_Click);
-            // 
             // dataGridView2
             // 
             this.dataGridView2.AllowUserToAddRows = false;
             this.dataGridView2.AllowUserToDeleteRows = false;
+            this.dataGridView2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridView2.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridView2.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dataGridView2.BackgroundColor = System.Drawing.Color.WhiteSmoke;
@@ -398,14 +365,76 @@ namespace Workday
             this.dataGridView2.Size = new System.Drawing.Size(830, 313);
             this.dataGridView2.TabIndex = 1;
             // 
+            // timer2
+            // 
+            this.timer2.Interval = 300;
+            this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
+            // 
+            // contextMenuStrip_History
+            // 
+            this.contextMenuStrip_History.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.Edit_History,
+            this.Delete_History});
+            this.contextMenuStrip_History.Name = "contextMenuStrip_History";
+            this.contextMenuStrip_History.Size = new System.Drawing.Size(108, 48);
+            // 
+            // button_Save
+            // 
+            this.button_Save.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.button_Save.Location = new System.Drawing.Point(535, 197);
+            this.button_Save.Name = "button_Save";
+            this.button_Save.Size = new System.Drawing.Size(89, 31);
+            this.button_Save.TabIndex = 6;
+            this.button_Save.Text = "Save";
+            this.button_Save.UseVisualStyleBackColor = true;
+            this.button_Save.Click += new System.EventHandler(this.button_Save_Click);
+            // 
+            // Notes
+            // 
+            this.Notes.Controls.Add(this.richTextBox_Notes);
+            this.Notes.Location = new System.Drawing.Point(4, 22);
+            this.Notes.Name = "Notes";
+            this.Notes.Size = new System.Drawing.Size(833, 345);
+            this.Notes.TabIndex = 3;
+            this.Notes.Text = "Notes";
+            this.Notes.UseVisualStyleBackColor = true;
+            // 
+            // richTextBox_Notes
+            // 
+            this.richTextBox_Notes.Location = new System.Drawing.Point(3, 3);
+            this.richTextBox_Notes.Name = "richTextBox_Notes";
+            this.richTextBox_Notes.Size = new System.Drawing.Size(822, 307);
+            this.richTextBox_Notes.TabIndex = 0;
+            this.richTextBox_Notes.Text = "";
+            // 
             // button_Add_Todo
             // 
-            this.button_Add_Todo.Location = new System.Drawing.Point(8, 3);
+            this.button_Add_Todo.Image = global::Workday.Properties.Resources.plus_sign24;
+            this.button_Add_Todo.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button_Add_Todo.Location = new System.Drawing.Point(8, 4);
             this.button_Add_Todo.Name = "button_Add_Todo";
-            this.button_Add_Todo.Size = new System.Drawing.Size(75, 23);
+            this.button_Add_Todo.Size = new System.Drawing.Size(86, 23);
             this.button_Add_Todo.TabIndex = 2;
-            this.button_Add_Todo.Text = "Add New";
+            this.button_Add_Todo.Text = "   Add New";
+            this.button_Add_Todo.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.button_Add_Todo.UseVisualStyleBackColor = true;
+            this.button_Add_Todo.Click += new System.EventHandler(this.button_Add_Todo_Click);
+            // 
+            // Edit_History
+            // 
+            this.Edit_History.Image = global::Workday.Properties.Resources.pencil32;
+            this.Edit_History.Name = "Edit_History";
+            this.Edit_History.Size = new System.Drawing.Size(107, 22);
+            this.Edit_History.Text = "Edit";
+            this.Edit_History.Click += new System.EventHandler(this.Edit_History_Click);
+            // 
+            // Delete_History
+            // 
+            this.Delete_History.Image = global::Workday.Properties.Resources.trash;
+            this.Delete_History.Name = "Delete_History";
+            this.Delete_History.Size = new System.Drawing.Size(107, 22);
+            this.Delete_History.Text = "Delete";
+            this.Delete_History.Click += new System.EventHandler(this.Delete_History_Click);
             // 
             // Form1
             // 
@@ -418,6 +447,7 @@ namespace Workday
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Workday";
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.ResizeEnd += new System.EventHandler(this.Form1_ResizeEnd);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.Form1_Paint);
             this.Resize += new System.EventHandler(this.Form1_Resize);
             this.tabControl1.ResumeLayout(false);
@@ -426,8 +456,9 @@ namespace Workday
             this.History.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ToDo.ResumeLayout(false);
-            this.contextMenuStrip_History.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
+            this.contextMenuStrip_History.ResumeLayout(false);
+            this.Notes.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -460,6 +491,8 @@ namespace Workday
         private System.Windows.Forms.ToolStripMenuItem Delete_History;
         private System.Windows.Forms.Button button_Add_Todo;
         private System.Windows.Forms.DataGridView dataGridView2;
+        private System.Windows.Forms.TabPage Notes;
+        private System.Windows.Forms.RichTextBox richTextBox_Notes;
     }
 }
 
