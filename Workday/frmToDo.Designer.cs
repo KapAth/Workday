@@ -89,6 +89,7 @@ namespace Workday
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "frmToDo";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmToDo_FormClosed);
+            this.VisibleChanged += new System.EventHandler(this.frmToDo_VisibleChanged);
             this.ResumeLayout(false);
             this.PerformLayout();
 

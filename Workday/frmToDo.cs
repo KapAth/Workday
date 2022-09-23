@@ -22,19 +22,21 @@ namespace Workday
 
         private void button_Close_Click(object sender, EventArgs e)
         {
+          
             try { this.Close(); } catch { }
         }
 
         private void frmToDo_FormClosed(object sender, FormClosedEventArgs e)
         {
             try { Form1._frmToDo = null; } catch { }
+            try { Form1.edit = false;} catch { }
         }
 
         private void button_Add_Click(object sender, EventArgs e)
         {
             try
             {
-
+                Form1 objMain = (Form1)_frm;
                 XDocument doc = XDocument.Load(@"ToDoAndNotes.xml");
                 XElement existingId;
                 try // check if id Exists
@@ -54,23 +56,25 @@ namespace Workday
                                new XElement("Status", "Pending"),
                                new XElement("Title", richTextBox_ToDo.Text)));
                     doc.Save("ToDoAndNotes.xml");
+                    objMain.ReloadTodoGrid();
                 }
                 else // its editing, change existing elements
                 {
                     existingId.Element("Title").Value =richTextBox_ToDo.Text;
-                    doc.Save("History.xml");
+                    doc.Save("ToDoAndNotes.xml");
 
                     //  Form1.SessionID = "";
-                    Form1.edit = false;
-                    
+                   
 
+                    objMain.ReloadTodoGrid();
+                    objMain.SelectedGridRow(2);
 
                 }
-
+                Form1.edit = false;
                 this.Close();
 
-                Form1 objMain = (Form1)_frm;
-                objMain.ReloadTodoGrid();
+                
+               
                 //MessageBox.Show("Saved Succefully!", "Workday", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
 
@@ -79,6 +83,18 @@ namespace Workday
             {
 
                 throw;
+            }
+        }
+
+        private void frmToDo_VisibleChanged(object sender, EventArgs e)
+        {
+            if (Form1.edit)
+            {
+                richTextBox_ToDo.Text = Form1.ToDoTitle;
+            }
+            else
+            {
+                richTextBox_ToDo.Clear();
             }
         }
     }

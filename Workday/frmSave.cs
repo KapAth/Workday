@@ -87,14 +87,14 @@ namespace Workday
                         existingId.Element("Title").Value = textBox_Title.Text;
                         existingId.Element("Remarks").Value = richTextBox_Remarks.Text;
                         existingId.Element("TotalTime").Value = TotalTime;
-                        existingId.Element("Date").Value = DateTime.Now.ToShortDateString();
+                      //  existingId.Element("Date").Value = DateTime.Now.ToShortDateString();
                         doc.Save("History.xml");
 
                       //  Form1.SessionID = "";
                         Form1.edit = false;
                         Form1 objMain = (Form1)_frm;
                         objMain.ReloadHistoryGrid();
-
+                        objMain.SelectedGridRow(1);
 
                     }
                     this.Close();
@@ -106,18 +106,21 @@ namespace Workday
             catch (Exception ex)
             {
                 //string x = ex.Message;
-                MessageBox.Show("WriteOrUpdateXML: " + ex.Message,"Workday",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                MessageBox.Show("WriteOrUpdateHistoryXML: " + ex.Message,"Workday",MessageBoxButtons.OK,MessageBoxIcon.Error);
             }
         }
 
         private void button_close_Click(object sender, EventArgs e)
         {
+            try { textBox_Title.Clear(); } catch { }
+            try { richTextBox_Remarks.Clear(); } catch { }
             try { this.Close(); } catch { }
         }
 
         private void frmSave_FormClosed(object sender, FormClosedEventArgs e)
         {
             try { Form1._frmSave = null; } catch { }
+            try { Form1.edit = false; } catch { }
         }
 
         private void frmSave_Paint(object sender, PaintEventArgs e)

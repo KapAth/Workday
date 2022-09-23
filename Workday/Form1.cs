@@ -36,7 +36,7 @@ namespace Workday
         private int nextBreak = 0;
         private static int workTime = 0;
         private bool stop = false;
-        private int selectedRow;
+        private  int selectedRow;
         //  TimeSpan ts = new TimeSpan();
         TimeSpan tsRemainingTime;
         private bool gridInitialized = false;
@@ -68,6 +68,7 @@ namespace Workday
         public static string remarks;
         public static string date;
         public static string sessions;
+        public static string ToDoTitle;
 
 
         //public static Form1 _frmMain;
@@ -88,6 +89,11 @@ namespace Workday
                 {
                     new XDocument(
                         new XElement("HISTORY", "")).Save("History.xml");
+                }
+                if (!File.Exists("ToDoAndNotes.xml"))
+                {
+                    new XDocument(
+                        new XElement("TODO", "")).Save("ToDoAndNotes.xml");
                 }
                 button_Stop.Enabled = false;
                 button_Reset.Enabled = false;
@@ -730,6 +736,19 @@ namespace Workday
             }
         }
 
+        public void SelectedGridRow(int select)
+        {
+            if (select == 1)//1 for History, 2 for ToDo
+            {
+                try { dataGridView1.Rows[selectedRow].Selected = true; } catch { }
+            }
+            else
+            {
+                try { dataGridView2.Rows[selectedRow].Selected = true; } catch { }
+            }
+           
+        }
+
         private void History_Paint(object sender, PaintEventArgs e)
         {
             PaintGradient(sender, e);
@@ -1075,7 +1094,229 @@ namespace Workday
 
 
         }
+
+        private void button_Save_Notes_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                XDocument doc = XDocument.Load(@"ToDoAndNotes.xml");
+                XElement existing = doc.Element("TODO");
+
+                try { existing.Element("notes").Value = richTextBox_Notes.Text; } catch { existing.Add(new XElement("notes", richTextBox_Notes.Text)); }
+                doc.Save("ToDoAndNotes.xml");
+                MessageBox.Show("Notes saved successfully", "Workday", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Cursor.Current = Cursors.Default;
+            }
+            catch (Exception ex)
+            {
+                Cursor.Current = Cursors.Default;
+                MessageBox.Show(ex.Message,"Workday", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void dataGridView2_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            try
+            {
+                //handle the row selection on right click
+                if (e.Button == MouseButtons.Right && e.RowIndex != -1)
+                {
+                    string ID = dataGridView2.Rows[e.RowIndex].Cells[0].Value.ToString();
+                    selectedRow = e.RowIndex;
+                    try
+                    {
+                        dataGridView2.CurrentCell = dataGridView2.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                        // Can leave these here - doesn't hurt
+                        dataGridView2.Rows[e.RowIndex].Selected = true;
+
+                        dataGridView2.Focus();
+                        contextMenuStrip_ToDo.Show(Cursor.Position.X, Cursor.Position.Y);
+
+                    }
+                    catch (Exception ex)
+                    {
+
+                        MessageBox.Show(ex.Message, "WorkDay", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+            catch { }
+        }
+
+        private void EditTodo_Click(object sender, EventArgs e)
+        {
+            edit = true;
+            EditTodo2(selectedRow);
+        }
+        private void EditTodo2(int RowIndex)
+        {
+            try
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                if (RowIndex < 0)
+                {
+                    return;
+                    Cursor.Current = Cursors.Default;
+                }
+                if (FindToDoWithID(dataGridView2.Rows[RowIndex].Cells[0].Value.ToString()))
+                {
+                    if (_frmToDo == null)
+                    {
+                        _frmToDo = new frmToDo(this);
+
+                        _frmToDo.ShowDialog();
+                        Cursor.Current = Cursors.Default;
+                        //e GlobalVariables.fForm2.TopLevel = true;
+                    }
+                    else
+                    {
+                        Cursor.Current = Cursors.Default;
+                        MessageBox.Show("Please edit one ToDo item at a time", "Workday", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+                    }
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("EditSession " + ex.Message.ToString());
+            }
+        }
+
+        public static Boolean FindToDoWithID(string ID)
+        {
+            try
+            {
+                XDocument doc = XDocument.Load(@"ToDoAndNotes.xml");
+
+                XElement existingId = doc.Element("TODO").Elements("ToDo")
+                       .Where(idElement => idElement.Element("ID").Value == ID)
+                       .FirstOrDefault();
+
+                if ((existingId == null))
+                {
+                    MessageBox.Show("FindToDoWithID: ToDo ID is empty or does not match with any ToDo in the ToDoAndNotes.xml");
+
+                    return (false);
+                }
+
+                //ToDoID = ID;
+
+                ToDoTitle = existingId.Element("Title").Value;
+     
+
+                return (true);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("FindToDoWithID: " + ex.Message);
+                return (false);
+            }
+        }
+
+        private void dataGridView2_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            edit = true;
+            EditTodo2(e.RowIndex);
+            
+        }
+
+        private void Completed_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ToDoID = dataGridView2.Rows[selectedRow].Cells[0].Value.ToString();
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Select a valid ToDo", " Workday", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            try
+            {
+                XDocument doc = XDocument.Load(@"ToDoAndNotes.xml");
+
+                XElement existingId = doc.Element("TODO").Elements("ToDo")
+                       .Where(idElement => idElement.Element("ID").Value == ToDoID)
+                       .FirstOrDefault();
+                try { existingId.Element("Status").Value = "Completed"; doc.Save("ToDoAndNotes.xml"); } catch { existingId.Add(new XElement("Status", "Completed")); doc.Save("ToDoAndNotes.xml"); }
+                ReloadTodoGrid();
+                try { SelectedGridRow(2); } catch { }
+            }
+            catch { }
+        }
+
+        private void Pending_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ToDoID = dataGridView2.Rows[selectedRow].Cells[0].Value.ToString();
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Select a valid ToDo", " Workday", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            try
+            {
+                XDocument doc = XDocument.Load(@"ToDoAndNotes.xml");
+
+                XElement existingId = doc.Element("TODO").Elements("ToDo")
+                       .Where(idElement => idElement.Element("ID").Value == ToDoID)
+                       .FirstOrDefault();
+                try { existingId.Element("Status").Value = "Pending"; doc.Save("ToDoAndNotes.xml"); } catch { existingId.Add(new XElement("Status", "Pending")); doc.Save("ToDoAndNotes.xml"); }
+                ReloadTodoGrid();
+                try { SelectedGridRow(2); } catch { }
+            }
+            catch { }
+        }
+
+        private void DeleteTodo_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                DeleteSelectedToDo();
+                Cursor.Current = Cursors.Default;
+            }
+            catch (Exception ex)
+            {
+                Cursor.Current = Cursors.Default;
+                MessageBox.Show(ex.Message, "WorkDay", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        private void DeleteSelectedToDo()
+        {
+            if (MessageBox.Show("Are you sure you want to delete the selected ToDo ?", "Workday", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No) return;
+            // if (MessageBox.Show("Are you sure you want to delete the selected session ? (1/2)", "WorkDay", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No) return;
+            // if (MessageBox.Show("Are you really sure you want to delete the selected session ? (2/2)","WorkDay", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No) return;
+            string ID = "";
+            try
+            {
+                ID = dataGridView2.Rows[selectedRow].Cells[0].Value.ToString();
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Please select a valid ToDo", "Workday", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            try
+            {
+                XDocument doc = XDocument.Load(@"ToDoAndNotes.xml");
+
+                XElement existingId = doc.Element("TODO").Elements("ToDo")
+                       .Where(idElement => idElement.Element("ID").Value == ID)
+                       .FirstOrDefault();
+                existingId.Remove();
+                doc.Save("ToDoAndNotes.xml");
+            }
+            catch { }
+            ReloadTodoGrid();
+        }
     }
+}
 
    
-}
+

@@ -30,10 +30,10 @@ namespace Workday
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle20 = new System.Windows.Forms.DataGridViewCellStyle();
             this.label_Time = new System.Windows.Forms.Label();
             this.button_Start = new System.Windows.Forms.Button();
             this.button_Stop = new System.Windows.Forms.Button();
@@ -48,28 +48,35 @@ namespace Workday
             this.textBox_WorkMin = new System.Windows.Forms.TextBox();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.label_break = new System.Windows.Forms.Label();
+            this.button_Save = new System.Windows.Forms.Button();
             this.label_Technique = new System.Windows.Forms.Label();
             this.comboBox_Technique = new System.Windows.Forms.ComboBox();
             this.History = new System.Windows.Forms.TabPage();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.ToDo = new System.Windows.Forms.TabPage();
+            this.button_Add_Todo = new System.Windows.Forms.Button();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
+            this.Notes = new System.Windows.Forms.TabPage();
+            this.button_Save_Notes = new System.Windows.Forms.Button();
+            this.richTextBox_Notes = new System.Windows.Forms.RichTextBox();
             this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStrip_History = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.button_Save = new System.Windows.Forms.Button();
-            this.Notes = new System.Windows.Forms.TabPage();
-            this.richTextBox_Notes = new System.Windows.Forms.RichTextBox();
-            this.button_Add_Todo = new System.Windows.Forms.Button();
             this.Edit_History = new System.Windows.Forms.ToolStripMenuItem();
             this.Delete_History = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStrip_ToDo = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.Completed = new System.Windows.Forms.ToolStripMenuItem();
+            this.Pending = new System.Windows.Forms.ToolStripMenuItem();
+            this.DeleteTodo = new System.Windows.Forms.ToolStripMenuItem();
+            this.EditTodo = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1.SuspendLayout();
             this.Session.SuspendLayout();
             this.History.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.ToDo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
-            this.contextMenuStrip_History.SuspendLayout();
             this.Notes.SuspendLayout();
+            this.contextMenuStrip_History.SuspendLayout();
+            this.contextMenuStrip_ToDo.SuspendLayout();
             this.SuspendLayout();
             // 
             // label_Time
@@ -235,6 +242,17 @@ namespace Workday
             this.label_break.TabIndex = 5;
             this.label_break.Text = "Break";
             // 
+            // button_Save
+            // 
+            this.button_Save.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.button_Save.Location = new System.Drawing.Point(535, 197);
+            this.button_Save.Name = "button_Save";
+            this.button_Save.Size = new System.Drawing.Size(89, 31);
+            this.button_Save.TabIndex = 6;
+            this.button_Save.Text = "Save";
+            this.button_Save.UseVisualStyleBackColor = true;
+            this.button_Save.Click += new System.EventHandler(this.button_Save_Click);
+            // 
             // label_Technique
             // 
             this.label_Technique.AutoSize = true;
@@ -280,23 +298,23 @@ namespace Workday
             this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridView1.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dataGridView1.BackgroundColor = System.Drawing.Color.WhiteSmoke;
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
-            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.Color.Transparent;
-            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle17.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle17.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
+            dataGridViewCellStyle17.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle17.SelectionBackColor = System.Drawing.Color.Transparent;
+            dataGridViewCellStyle17.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle17.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle17;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
-            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.Color.Tan;
-            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle18.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle18.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
+            dataGridViewCellStyle18.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle18.SelectionBackColor = System.Drawing.Color.Tan;
+            dataGridViewCellStyle18.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle18.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle18;
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.EnableHeadersVisualStyles = false;
             this.dataGridView1.GridColor = System.Drawing.SystemColors.ActiveCaptionText;
@@ -325,6 +343,19 @@ namespace Workday
             this.ToDo.Text = "To Do";
             this.ToDo.UseVisualStyleBackColor = true;
             // 
+            // button_Add_Todo
+            // 
+            this.button_Add_Todo.Image = global::Workday.Properties.Resources.plus_sign24;
+            this.button_Add_Todo.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button_Add_Todo.Location = new System.Drawing.Point(8, 4);
+            this.button_Add_Todo.Name = "button_Add_Todo";
+            this.button_Add_Todo.Size = new System.Drawing.Size(86, 23);
+            this.button_Add_Todo.TabIndex = 2;
+            this.button_Add_Todo.Text = "   Add New";
+            this.button_Add_Todo.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.button_Add_Todo.UseVisualStyleBackColor = true;
+            this.button_Add_Todo.Click += new System.EventHandler(this.button_Add_Todo_Click);
+            // 
             // dataGridView2
             // 
             this.dataGridView2.AllowUserToAddRows = false;
@@ -335,23 +366,23 @@ namespace Workday
             this.dataGridView2.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridView2.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dataGridView2.BackgroundColor = System.Drawing.Color.WhiteSmoke;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
-            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.Color.Transparent;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView2.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle19.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle19.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
+            dataGridViewCellStyle19.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle19.SelectionBackColor = System.Drawing.Color.Transparent;
+            dataGridViewCellStyle19.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle19.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView2.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle19;
             this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.Tan;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView2.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle20.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle20.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
+            dataGridViewCellStyle20.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle20.SelectionBackColor = System.Drawing.Color.Tan;
+            dataGridViewCellStyle20.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle20.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView2.DefaultCellStyle = dataGridViewCellStyle20;
             this.dataGridView2.EnableHeadersVisualStyles = false;
             this.dataGridView2.GridColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.dataGridView2.Location = new System.Drawing.Point(3, 32);
@@ -364,6 +395,42 @@ namespace Workday
             this.dataGridView2.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView2.Size = new System.Drawing.Size(830, 313);
             this.dataGridView2.TabIndex = 1;
+            this.dataGridView2.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView2_CellDoubleClick);
+            this.dataGridView2.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView2_CellMouseDown);
+            // 
+            // Notes
+            // 
+            this.Notes.Controls.Add(this.button_Save_Notes);
+            this.Notes.Controls.Add(this.richTextBox_Notes);
+            this.Notes.Location = new System.Drawing.Point(4, 22);
+            this.Notes.Name = "Notes";
+            this.Notes.Size = new System.Drawing.Size(833, 345);
+            this.Notes.TabIndex = 3;
+            this.Notes.Text = "Notes";
+            this.Notes.UseVisualStyleBackColor = true;
+            // 
+            // button_Save_Notes
+            // 
+            this.button_Save_Notes.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button_Save_Notes.Location = new System.Drawing.Point(750, 316);
+            this.button_Save_Notes.Name = "button_Save_Notes";
+            this.button_Save_Notes.Size = new System.Drawing.Size(75, 23);
+            this.button_Save_Notes.TabIndex = 1;
+            this.button_Save_Notes.Text = "Save";
+            this.button_Save_Notes.UseVisualStyleBackColor = true;
+            this.button_Save_Notes.Click += new System.EventHandler(this.button_Save_Notes_Click);
+            // 
+            // richTextBox_Notes
+            // 
+            this.richTextBox_Notes.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.richTextBox_Notes.Font = new System.Drawing.Font("Noto Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.richTextBox_Notes.Location = new System.Drawing.Point(3, 3);
+            this.richTextBox_Notes.Name = "richTextBox_Notes";
+            this.richTextBox_Notes.Size = new System.Drawing.Size(822, 307);
+            this.richTextBox_Notes.TabIndex = 0;
+            this.richTextBox_Notes.Text = "";
             // 
             // timer2
             // 
@@ -377,48 +444,6 @@ namespace Workday
             this.Delete_History});
             this.contextMenuStrip_History.Name = "contextMenuStrip_History";
             this.contextMenuStrip_History.Size = new System.Drawing.Size(108, 48);
-            // 
-            // button_Save
-            // 
-            this.button_Save.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.button_Save.Location = new System.Drawing.Point(535, 197);
-            this.button_Save.Name = "button_Save";
-            this.button_Save.Size = new System.Drawing.Size(89, 31);
-            this.button_Save.TabIndex = 6;
-            this.button_Save.Text = "Save";
-            this.button_Save.UseVisualStyleBackColor = true;
-            this.button_Save.Click += new System.EventHandler(this.button_Save_Click);
-            // 
-            // Notes
-            // 
-            this.Notes.Controls.Add(this.richTextBox_Notes);
-            this.Notes.Location = new System.Drawing.Point(4, 22);
-            this.Notes.Name = "Notes";
-            this.Notes.Size = new System.Drawing.Size(833, 345);
-            this.Notes.TabIndex = 3;
-            this.Notes.Text = "Notes";
-            this.Notes.UseVisualStyleBackColor = true;
-            // 
-            // richTextBox_Notes
-            // 
-            this.richTextBox_Notes.Location = new System.Drawing.Point(3, 3);
-            this.richTextBox_Notes.Name = "richTextBox_Notes";
-            this.richTextBox_Notes.Size = new System.Drawing.Size(822, 307);
-            this.richTextBox_Notes.TabIndex = 0;
-            this.richTextBox_Notes.Text = "";
-            // 
-            // button_Add_Todo
-            // 
-            this.button_Add_Todo.Image = global::Workday.Properties.Resources.plus_sign24;
-            this.button_Add_Todo.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button_Add_Todo.Location = new System.Drawing.Point(8, 4);
-            this.button_Add_Todo.Name = "button_Add_Todo";
-            this.button_Add_Todo.Size = new System.Drawing.Size(86, 23);
-            this.button_Add_Todo.TabIndex = 2;
-            this.button_Add_Todo.Text = "   Add New";
-            this.button_Add_Todo.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.button_Add_Todo.UseVisualStyleBackColor = true;
-            this.button_Add_Todo.Click += new System.EventHandler(this.button_Add_Todo_Click);
             // 
             // Edit_History
             // 
@@ -435,6 +460,48 @@ namespace Workday
             this.Delete_History.Size = new System.Drawing.Size(107, 22);
             this.Delete_History.Text = "Delete";
             this.Delete_History.Click += new System.EventHandler(this.Delete_History_Click);
+            // 
+            // contextMenuStrip_ToDo
+            // 
+            this.contextMenuStrip_ToDo.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.EditTodo,
+            this.Completed,
+            this.Pending,
+            this.DeleteTodo});
+            this.contextMenuStrip_ToDo.Name = "contextMenuStrip_ToDo";
+            this.contextMenuStrip_ToDo.Size = new System.Drawing.Size(134, 92);
+            // 
+            // Completed
+            // 
+            this.Completed.Image = global::Workday.Properties.Resources.check24;
+            this.Completed.Name = "Completed";
+            this.Completed.Size = new System.Drawing.Size(180, 22);
+            this.Completed.Text = "Completed";
+            this.Completed.Click += new System.EventHandler(this.Completed_Click);
+            // 
+            // Pending
+            // 
+            this.Pending.Image = global::Workday.Properties.Resources.hourglass24;
+            this.Pending.Name = "Pending";
+            this.Pending.Size = new System.Drawing.Size(180, 22);
+            this.Pending.Text = "Pending";
+            this.Pending.Click += new System.EventHandler(this.Pending_Click);
+            // 
+            // DeleteTodo
+            // 
+            this.DeleteTodo.Image = global::Workday.Properties.Resources.trash;
+            this.DeleteTodo.Name = "DeleteTodo";
+            this.DeleteTodo.Size = new System.Drawing.Size(180, 22);
+            this.DeleteTodo.Text = "Delete";
+            this.DeleteTodo.Click += new System.EventHandler(this.DeleteTodo_Click);
+            // 
+            // EditTodo
+            // 
+            this.EditTodo.Image = global::Workday.Properties.Resources.pencil32;
+            this.EditTodo.Name = "EditTodo";
+            this.EditTodo.Size = new System.Drawing.Size(133, 22);
+            this.EditTodo.Text = "Edit";
+            this.EditTodo.Click += new System.EventHandler(this.EditTodo_Click);
             // 
             // Form1
             // 
@@ -457,8 +524,9 @@ namespace Workday
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ToDo.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
-            this.contextMenuStrip_History.ResumeLayout(false);
             this.Notes.ResumeLayout(false);
+            this.contextMenuStrip_History.ResumeLayout(false);
+            this.contextMenuStrip_ToDo.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -493,6 +561,12 @@ namespace Workday
         private System.Windows.Forms.DataGridView dataGridView2;
         private System.Windows.Forms.TabPage Notes;
         private System.Windows.Forms.RichTextBox richTextBox_Notes;
+        private System.Windows.Forms.Button button_Save_Notes;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip_ToDo;
+        private System.Windows.Forms.ToolStripMenuItem Completed;
+        private System.Windows.Forms.ToolStripMenuItem Pending;
+        private System.Windows.Forms.ToolStripMenuItem DeleteTodo;
+        private System.Windows.Forms.ToolStripMenuItem EditTodo;
     }
 }
 
