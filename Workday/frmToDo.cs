@@ -63,11 +63,12 @@ namespace Workday
                     existingId.Element("Title").Value =richTextBox_ToDo.Text;
                     doc.Save("ToDoAndNotes.xml");
 
-                    //  Form1.SessionID = "";
+                   
                    
 
                     objMain.ReloadTodoGrid();
                     objMain.SelectedGridRow(2);
+                   
 
                 }
                 Form1.edit = false;
@@ -79,23 +80,32 @@ namespace Workday
 
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                MessageBox.Show("Button Add:" + ex.Message, "Workday", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void frmToDo_VisibleChanged(object sender, EventArgs e)
         {
-            if (Form1.edit)
+            try
             {
-                richTextBox_ToDo.Text = Form1.ToDoTitle;
+                if (Form1.edit)
+                {
+                    richTextBox_ToDo.Text = Form1.ToDoTitle;
+                }
+                else
+                {
+                    richTextBox_ToDo.Clear();
+                }
             }
-            else
-            {
-                richTextBox_ToDo.Clear();
-            }
+            catch { }
+        }
+
+        private void frmToDo_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            try { Form1.ToDoID = ""; } catch { } //in case edit is open but not done
         }
     }
 }

@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Linq;
-
+using System.Media;
 ///  COLOR
 /// https://www.c-sharpcorner.com/article/gradient-background-tab-custom-control/
 ///
@@ -29,7 +29,7 @@ namespace Workday
 
         private string nl = Environment.NewLine;
 
-       
+        private SoundPlayer _soundPlayer;
 
         private static int breakMin = 0;
         private bool breakMode = false;
@@ -76,6 +76,7 @@ namespace Workday
         {
             InitializeComponent();
             //_frmMain = this;
+            _soundPlayer = new SoundPlayer("bell.wav");
 
 
         }
@@ -105,6 +106,7 @@ namespace Workday
                 TransparetBackground(button_Stop);
                 TransparetBackground(button_Save);
                 TransparetBackground(dataGridView1);
+                TransparetBackground(checkBox_Sound);
             }
             catch(Exception ex)
             {
@@ -116,53 +118,61 @@ namespace Workday
 
         private void button_Start_Click(object sender, EventArgs e)
         {
-            if (comboBox_Technique.Text == "Custom" && (string.IsNullOrEmpty(textBox_WorkMin.Text) || string.IsNullOrEmpty(textBox_BreakMin.Text)))
+            try
             {
-                MessageBox.Show("Please set work time and break time to start", "Workday", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-            else if (!breakMode && comboBox_Technique.Text == "Custom" && (!string.IsNullOrEmpty(textBox_WorkMin.Text) || !string.IsNullOrEmpty(textBox_BreakMin.Text)))
-            {
-                TextBoxCustomMinutesEnable(false);
-                workTime = Convert.ToInt32(textBox_WorkMin.Text);
-                breakMin = Convert.ToInt32(textBox_BreakMin.Text);
-                techniqueStr =textBox_WorkMin.Text+ "-"+textBox_BreakMin.Text;
-                nextBreak = workTime;
-                tsRemainingTime = new TimeSpan(0, breakMin, 1);
+                if (comboBox_Technique.Text == "Custom" && (string.IsNullOrEmpty(textBox_WorkMin.Text) || string.IsNullOrEmpty(textBox_BreakMin.Text)))
+                {
+                    MessageBox.Show("Please set work time and break time to start", "Workday", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+                else if (!breakMode && comboBox_Technique.Text == "Custom" && (!string.IsNullOrEmpty(textBox_WorkMin.Text) || !string.IsNullOrEmpty(textBox_BreakMin.Text)))
+                {
+                    TextBoxCustomMinutesEnable(false);
+                    workTime = Convert.ToInt32(textBox_WorkMin.Text);
+                    breakMin = Convert.ToInt32(textBox_BreakMin.Text);
+                    techniqueStr = textBox_WorkMin.Text + "-" + textBox_BreakMin.Text;
+                    nextBreak = workTime;
+                    tsRemainingTime = new TimeSpan(0, breakMin, 1);
 
-                stopwatchBreak = new Stopwatch();
-            }
+                    stopwatchBreak = new Stopwatch();
+                }
 
-            /*to get new ID in case of just started
-            or keep the same ID in case of saved 2 times during same session
-            ensures dublicates are not created in History.xml */
-            if (stopWatch.Elapsed.TotalSeconds == 0)
-            {
-                SessionID = DateTime.Now.ToString("yyyyMMddHHmmss");
-            }
-            stopWatch.Start();
-            
-            timer1.Start();
-            button_Start.Enabled = false;
-            button_Stop.Enabled = true;
-            button_Reset.Enabled = true;
-           
-            comboBox_Technique.Enabled = false;
+                /*to get new ID in case of just started
+                or keep the same ID in case of saved 2 times during same session
+                ensures dublicates are not created in History.xml */
+                if (stopWatch.Elapsed.TotalSeconds == 0)
+                {
+                    SessionID = DateTime.Now.ToString("yyyyMMddHHmmss");
+                }
+                stopWatch.Start();
 
-            if (breakMode)//if started after a stop while in break
-            {
-                stop = false;
-                stopwatchBreak.Start();
-                timer2.Start();
+                timer1.Start();
+                button_Start.Enabled = false;
+                button_Stop.Enabled = true;
+                button_Reset.Enabled = true;
+
+                comboBox_Technique.Enabled = false;
+
+                if (breakMode)//if started after a stop while in break
+                {
+                    stop = false;
+                    stopwatchBreak.Start();
+                    timer2.Start();
+                }
+                if (label_SessionNo.Visible == false)
+                {
+                    label_SessionNo.Visible = true;
+                }
+                if (sessionNo == 0)
+                {
+                    label_SessionNo.Text = "Session 1";
+                    sessionNo = 1;
+                }
             }
-            if(label_SessionNo.Visible== false)
+            catch (Exception ex)
             {
-                label_SessionNo.Visible = true;
-            }
-            if (sessionNo == 0)
-            {
-                label_SessionNo.Text = "Session 1";
-                sessionNo = 1;
+
+                MessageBox.Show("Button Start: " + ex.Message, "Workday", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
 
@@ -171,82 +181,92 @@ namespace Workday
 
         private void button_Stop_Click(object sender, EventArgs e)
         {
-            stopWatch.Stop();
-
-
-
-            if (breakMode)
+            try
             {
-                stopwatchBreak.Stop();
-                timer2.Stop();
-                stop = true;
+                stopWatch.Stop();
 
+
+
+                if (breakMode)
+                {
+                    stopwatchBreak.Stop();
+                    timer2.Stop();
+                    stop = true;
+
+                }
+
+
+                button_Start.Enabled = true;
+                button_Stop.Enabled = false;
+                button_Reset.Enabled = true;
+                comboBox_Technique.Enabled = false;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Button Stop: " + ex.Message, "Workday", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
            
-
-            button_Start.Enabled = true;
-            button_Stop.Enabled = false;
-            button_Reset.Enabled = true;
-            comboBox_Technique.Enabled = false;
-           
-
-
-
         }
 
         private void button_Reset_Click(object sender, EventArgs e)
         {
-            stopWatch.Reset();
-            
-            button_Start.Enabled = true;
-            button_Stop.Enabled = false;
-            button_Reset.Enabled = true;
-            comboBox_Technique.Enabled = true;
-            TextBoxCustomMinutesEnable(true);
-            label_break.Visible = false;
-            progressBar1.Visible = false;
-            breakMode = false;
-
-
-            if (breakMode)
+            try
             {
-                stopwatchBreak.Reset();
-                timer2.Stop();
-                
+                stopWatch.Reset();
+
+                button_Start.Enabled = true;
+                button_Stop.Enabled = false;
+                button_Reset.Enabled = true;
+                comboBox_Technique.Enabled = true;
+                TextBoxCustomMinutesEnable(true);
+                label_break.Visible = false;
+                progressBar1.Visible = false;
+                breakMode = false;
 
 
+                if (breakMode)
+                {
+                    stopwatchBreak.Reset();
+                    timer2.Stop();
+
+
+
+                }
+                label_SessionNo.Visible = false;
+                sessionNo = 0;
             }
-            label_SessionNo.Visible = false;
-            sessionNo = 0;
+            catch(Exception ex)
+            {
+                MessageBox.Show("Button Resset: " + ex.Message, "Workday", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            label_Time.Text = string.Format("{0:hh\\:mm\\:ss}", stopWatch.Elapsed);
-
-           
-            int totalMinutes = (int)stopWatch.Elapsed.TotalMinutes;
-            if ( breakMin != 0 && totalMinutes != 0 && (totalMinutes % nextBreak==0)  && !breakMode)
+            try
             {
+                label_Time.Text = string.Format("{0:hh\\:mm\\:ss}", stopWatch.Elapsed);
+
+
+                int totalMinutes = (int)stopWatch.Elapsed.TotalMinutes;
+                if (breakMin != 0 && totalMinutes != 0 && (totalMinutes % nextBreak == 0) && !breakMode)
+                {
                     stopwatchBreak.Start();
                     timer2.Start();
 
-                StartBreak();
-                
-                File.AppendAllText("BREAKS.txt", "break: " + nextBreak + " TotalMinutes: " + totalMinutes + Environment.NewLine);
+                    StartBreak();
 
-                nextBreak = totalMinutes + workTime + breakMin;
-                breakMode = true;
-                
+                    File.AppendAllText("BREAKS.txt", "break: " + nextBreak + " TotalMinutes: " + totalMinutes + Environment.NewLine);
 
+                    nextBreak = totalMinutes + workTime + breakMin;
+                    breakMode = true;
+                }
             }
-
-           
-
-
-
-        }
-       
+            catch(Exception ex)
+            {
+                MessageBox.Show("Timer1 tick: " + ex.Message, "Workday", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }  
 
         private void label_Time_Click(object sender, EventArgs e)
         {
@@ -260,76 +280,113 @@ namespace Workday
                 {
                     this.WindowState = FormWindowState.Normal;
                 }
-                try { this.Activate(); } catch { }
+               // try { this.Activate(); } catch { }
+               
+              //  try { this.Focus(); } catch { }
+               // try { this.BringToFront(); } catch { }
+               try { this.TopMost = true; } catch { }
+               try { this.TopMost = false; } catch { }
             }
             catch { }
         }
         private void StartBreak()
         {
             BringUpWindow();
-            tabControl1.SelectTab("Session");
-            label_break.Visible = true;
-            progressBar1.Visible = true;
+            try
+            {
+                if (checkBox_Sound.Checked)
+                {
+                    _soundPlayer.Play();
+                }
+            }
+            catch { }
+            try
+            {
+                tabControl1.SelectTab("Session");
+                label_break.Visible = true;
+                progressBar1.Visible = true;
 
-            //progressBar1.Maximum = (breakMin *60* 1000)-300;
-            //progressBar1.Value = (breakMin *60*1000)-300;
-            progressBar1.Maximum = breakMin * 60;
-            progressBar1.Value = breakMin * 60;
-            breakMode = true;
+                //progressBar1.Maximum = (breakMin *60* 1000)-300;
+                //progressBar1.Value = (breakMin *60*1000)-300;
+                progressBar1.Maximum = breakMin * 60;
+                progressBar1.Value = breakMin * 60;
+                breakMode = true;
+            }
+            catch { }
         }
         private void EndBreak()
         {
             BringUpWindow();
-            timer2.Stop();
-            stopwatchBreak.Reset();
-            progressBar1.Value = 0;
+            try
+            {
+                if (checkBox_Sound.Checked)
+                {
+                    _soundPlayer.Play();
+                }
+            }
+            catch { }
+            try
+            {
+                timer2.Stop();
+                stopwatchBreak.Reset();
+                progressBar1.Value = 0;
 
-            tabControl1.SelectTab("Session");
-            label_break.Visible = false;
-            progressBar1.Visible = false;
-            breakMode = false;
-            sessionNo++;
-            label_SessionNo.Text = "Session " + sessionNo;
+                tabControl1.SelectTab("Session");
+                label_break.Visible = false;
+                progressBar1.Visible = false;
+                breakMode = false;
+                sessionNo++;
+                label_SessionNo.Text = "Session " + sessionNo;
+            }
+            catch { }
         }
 
       
       
         private void TextBoxCustomMinutesEnable(bool enable)
         {
-            if (comboBox_Technique.Text == "Custom")
+            try
             {
-                if (enable)
+                if (comboBox_Technique.Text == "Custom")
                 {
-                    textBox_WorkMin.Enabled = true;
-                    textBox_BreakMin.Enabled = true;
-                }
-                else
-                {
-                    textBox_WorkMin.Enabled = false;
-                    textBox_BreakMin.Enabled = false;
+                    if (enable)
+                    {
+                        textBox_WorkMin.Enabled = true;
+                        textBox_BreakMin.Enabled = true;
+                    }
+                    else
+                    {
+                        textBox_WorkMin.Enabled = false;
+                        textBox_BreakMin.Enabled = false;
+                    }
                 }
             }
+            catch { }
             
         }
 
 
         private void CustomTextBoxVisible(bool visible)
         {
-            if (visible)
+            try
             {
-                textBox_WorkMin.Visible = true;
-                textBox_BreakMin.Visible = true;
-                label_WorkMin.Visible = true;
-                label_BreakMin.Visible = true;
+                if (visible)
+                {
+                    textBox_WorkMin.Visible = true;
+                    textBox_BreakMin.Visible = true;
+                    label_WorkMin.Visible = true;
+                    label_BreakMin.Visible = true;
 
+                }
+                else
+                {
+                    textBox_WorkMin.Visible = false;
+                    textBox_BreakMin.Visible = false;
+                    label_WorkMin.Visible = false;
+                    label_BreakMin.Visible = false;
+                }
             }
-            else
-            {
-                textBox_WorkMin.Visible = false;
-                textBox_BreakMin.Visible = false;
-                label_WorkMin.Visible = false;
-                label_BreakMin.Visible = false;
-            }
+            catch { }
             
         }
         private void comboBox_Technique_SelectedIndexChanged(object sender, EventArgs e)
@@ -430,9 +487,8 @@ namespace Workday
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Button Save: "+ex.Message, "Workday", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
                 Cursor.Current = Cursors.Default;
+                MessageBox.Show("Button Save: "+ex.Message, "Workday", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -595,7 +651,6 @@ namespace Workday
                         {
                            myHistory.sessions = childNode.InnerText;
                         }
-                        
                     }
                     //appear only the first words in datagrid
                     //if (myHistory.remarks.Length > 50)
@@ -635,9 +690,8 @@ namespace Workday
                     try { row.Cells[6].Value = myHistoryList[i].remarks.Trim(); } catch { row.Cells[6].Value = ""; }
                     try { dataGridView1.Rows.Add(row); } catch { }
                     row.Dispose();
-
                 }
-                try { dataGridView1.Columns[0].Visible = false; } catch { }
+                
                 dataGridView1.Refresh();
                 dataGridView1.Update();
                 
@@ -647,7 +701,7 @@ namespace Workday
             catch (Exception ex)
             {
 
-                MessageBox.Show("LoadGridData: " + ex.Message, "WorkDay", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("LoadGridData: " + ex.Message, "Workday", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         private void InitializeHistoryGrid()
@@ -706,6 +760,7 @@ namespace Workday
                     dataGridView1.Columns["Technique"].SortMode = DataGridViewColumnSortMode.NotSortable;
                     dataGridView1.Columns["Sessions"].SortMode = DataGridViewColumnSortMode.NotSortable;
                     dataGridView1.Columns["Remarks"].SortMode = DataGridViewColumnSortMode.NotSortable;
+                    try { dataGridView1.Columns[0].Visible = false; } catch { }
                 }
 
             }
@@ -756,7 +811,7 @@ namespace Workday
 
         private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            // try { selectedRow = e.RowIndex; } catch { }
+            try { selectedRow = e.RowIndex; } catch { }
             edit = true;
             EditSession(e.RowIndex);
         }
@@ -784,7 +839,7 @@ namespace Workday
                     else
                     {
                         Cursor.Current = Cursors.Default;
-                        MessageBox.Show("Please edit one session at a time", "WorkDay", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show("Please edit one session at a time", "Workday", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         
                     }
                 }
@@ -793,7 +848,7 @@ namespace Workday
             }
             catch (Exception ex)
             {
-                MessageBox.Show("EditSession " + ex.Message.ToString());
+                MessageBox.Show("EditSession " + ex.Message,"Workday",MessageBoxButtons.OK,MessageBoxIcon.Error);
             }
         }
         public static Boolean FindSessionWithID(string ID)
@@ -831,7 +886,7 @@ namespace Workday
             }
             catch (Exception ex)
             {
-                MessageBox.Show("FindSessionWithID: " + ex.Message);
+                MessageBox.Show("FindSessionWithID: " + ex.Message,"Workday",MessageBoxButtons.OK,MessageBoxIcon.Error);
                 return (false);
             }
         }
@@ -864,7 +919,7 @@ namespace Workday
                     catch (Exception ex)
                     {
                        
-                        MessageBox.Show(ex.Message,"WorkDay", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(ex.Message,"Workday", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
@@ -888,12 +943,12 @@ namespace Workday
             catch(Exception ex)
             {
                 Cursor.Current = Cursors.Default;
-                MessageBox.Show(ex.Message, "WorkDay", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, "Workday", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         private void DeleteSelectedSession()
         {
-            if (MessageBox.Show("Are you sure you want to delete the selected session ?", "WorkDay", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No) return;
+            if (MessageBox.Show("Are you sure you want to delete the selected session ?", "Workday", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No) return;
            // if (MessageBox.Show("Are you sure you want to delete the selected session ? (1/2)", "WorkDay", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No) return;
            // if (MessageBox.Show("Are you really sure you want to delete the selected session ? (2/2)","WorkDay", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No) return;
             string ID = "";
@@ -903,7 +958,7 @@ namespace Workday
             }
             catch (Exception)
             {
-                MessageBox.Show("Please select a valid profile", "WorkDay", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Please select a valid profile", "Workday", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             try
@@ -961,6 +1016,7 @@ namespace Workday
                     ic.Dispose();
                     column2.Dispose();
                     column0.Dispose();
+                    try { dataGridView2.Columns[0].Visible = false; } catch { }
                 }
                 catch (Exception ex)
                 {
@@ -1015,7 +1071,7 @@ namespace Workday
                         try { dataGridView2.Rows.Add(row); row.Dispose(); } catch { }
                     }
                     
-                    try { dataGridView2.Columns[0].Visible = false; } catch { }
+                   
                 }
             }
             catch (Exception ex)
@@ -1137,7 +1193,7 @@ namespace Workday
                     catch (Exception ex)
                     {
 
-                        MessageBox.Show(ex.Message, "WorkDay", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(ex.Message, "Workday", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
@@ -1181,6 +1237,7 @@ namespace Workday
             }
             catch (Exception ex)
             {
+                Cursor.Current = Cursors.Default;
                 MessageBox.Show("EditSession " + ex.Message.ToString());
             }
         }
@@ -1202,7 +1259,7 @@ namespace Workday
                     return (false);
                 }
 
-                //ToDoID = ID;
+                ToDoID = ID;
 
                 ToDoTitle = existingId.Element("Title").Value;
      
@@ -1218,6 +1275,7 @@ namespace Workday
 
         private void dataGridView2_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
+            try { selectedRow = e.RowIndex; } catch { }
             edit = true;
             EditTodo2(e.RowIndex);
             
@@ -1284,7 +1342,7 @@ namespace Workday
             catch (Exception ex)
             {
                 Cursor.Current = Cursors.Default;
-                MessageBox.Show(ex.Message, "WorkDay", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, "Workday", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         private void DeleteSelectedToDo()

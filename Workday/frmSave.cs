@@ -35,6 +35,7 @@ namespace Workday
                     textBox_Title.Text = Form1.title;
                     label_Total_Time.Text = "Total Time: " + Form1.totalTime;
                     richTextBox_Remarks.Text = Form1.remarks;
+                    TotalTime = Form1.totalTime;
                 }
                 else
                 {
@@ -73,7 +74,7 @@ namespace Workday
                        // string NewID = DateTime.Now.ToString("yyyyMMddHHmmss");
                         XElement newSession = doc.Element("HISTORY");
                         newSession.Add(new XElement("Session",
-                                   new XElement("ID", Form1.SessionID),
+                                   new XElement("ID", DateTime.Now.ToString("yyyyMMddHHmmss")),
                                    new XElement("Title", textBox_Title.Text),
                                    new XElement("Technique", Form1.techniqueStr),
                                    new XElement("Remarks", richTextBox_Remarks.Text),
@@ -141,6 +142,11 @@ namespace Workday
         private void frmSave_Resize(object sender, EventArgs e)
         {
             try { this.Invalidate(); } catch { }
+        }
+
+        private void frmSave_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            try { Form1.SessionID = ""; } catch { } //in case edit is open but not done
         }
     }
 }

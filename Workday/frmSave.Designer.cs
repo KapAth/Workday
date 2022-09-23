@@ -40,9 +40,9 @@ namespace Workday
             // 
             // textBox_Title
             // 
-            this.textBox_Title.Location = new System.Drawing.Point(12, 78);
+            this.textBox_Title.Location = new System.Drawing.Point(13, 88);
             this.textBox_Title.Name = "textBox_Title";
-            this.textBox_Title.Size = new System.Drawing.Size(267, 20);
+            this.textBox_Title.Size = new System.Drawing.Size(385, 20);
             this.textBox_Title.TabIndex = 0;
             // 
             // label_Title
@@ -59,7 +59,7 @@ namespace Workday
             // 
             this.label_Remarks.AutoSize = true;
             this.label_Remarks.BackColor = System.Drawing.Color.Transparent;
-            this.label_Remarks.Location = new System.Drawing.Point(9, 127);
+            this.label_Remarks.Location = new System.Drawing.Point(13, 124);
             this.label_Remarks.Name = "label_Remarks";
             this.label_Remarks.Size = new System.Drawing.Size(49, 13);
             this.label_Remarks.TabIndex = 2;
@@ -67,9 +67,9 @@ namespace Workday
             // 
             // richTextBox_Remarks
             // 
-            this.richTextBox_Remarks.Location = new System.Drawing.Point(12, 155);
+            this.richTextBox_Remarks.Location = new System.Drawing.Point(13, 153);
             this.richTextBox_Remarks.Name = "richTextBox_Remarks";
-            this.richTextBox_Remarks.Size = new System.Drawing.Size(267, 222);
+            this.richTextBox_Remarks.Size = new System.Drawing.Size(385, 138);
             this.richTextBox_Remarks.TabIndex = 3;
             this.richTextBox_Remarks.Text = "";
             // 
@@ -86,7 +86,7 @@ namespace Workday
             // 
             // button_save
             // 
-            this.button_save.Location = new System.Drawing.Point(130, 398);
+            this.button_save.Location = new System.Drawing.Point(242, 306);
             this.button_save.Name = "button_save";
             this.button_save.Size = new System.Drawing.Size(75, 20);
             this.button_save.TabIndex = 5;
@@ -96,7 +96,7 @@ namespace Workday
             // 
             // button_close
             // 
-            this.button_close.Location = new System.Drawing.Point(211, 398);
+            this.button_close.Location = new System.Drawing.Point(323, 306);
             this.button_close.Name = "button_close";
             this.button_close.Size = new System.Drawing.Size(75, 20);
             this.button_close.TabIndex = 6;
@@ -109,7 +109,7 @@ namespace Workday
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.BurlyWood;
-            this.ClientSize = new System.Drawing.Size(298, 428);
+            this.ClientSize = new System.Drawing.Size(410, 329);
             this.Controls.Add(this.button_close);
             this.Controls.Add(this.button_save);
             this.Controls.Add(this.label_Total_Time);
@@ -122,7 +122,8 @@ namespace Workday
             this.MinimizeBox = false;
             this.Name = "frmSave";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Save Session";
+            this.Text = "Session";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmSave_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmSave_FormClosed);
             this.VisibleChanged += new System.EventHandler(this.frmSave_VisibleChanged);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.frmSave_Paint);
