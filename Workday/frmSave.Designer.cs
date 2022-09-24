@@ -29,6 +29,7 @@ namespace Workday
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmSave));
             this.textBox_Title = new System.Windows.Forms.TextBox();
             this.label_Title = new System.Windows.Forms.Label();
             this.label_Remarks = new System.Windows.Forms.Label();
@@ -118,6 +119,7 @@ namespace Workday
             this.Controls.Add(this.label_Title);
             this.Controls.Add(this.textBox_Title);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "frmSave";
