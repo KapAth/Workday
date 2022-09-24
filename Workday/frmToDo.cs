@@ -14,6 +14,7 @@ namespace Workday
     public partial class frmToDo : Form
     {
         private Form _frm;
+        private static string AppPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
         public frmToDo(Form frm)
         {
             _frm = frm;
@@ -37,7 +38,7 @@ namespace Workday
             try
             {
                 Form1 objMain = (Form1)_frm;
-                XDocument doc = XDocument.Load(@"ToDoAndNotes.xml");
+                XDocument doc = XDocument.Load(AppPath+@"/ToDoAndNotes.xml");
                 XElement existingId;
                 try // check if id Exists
                 {
@@ -55,13 +56,13 @@ namespace Workday
                                new XElement("ID", DateTime.Now.ToString("yyyyMMddHHmmss")),
                                new XElement("Status", "Pending"),
                                new XElement("Title", richTextBox_ToDo.Text)));
-                    doc.Save("ToDoAndNotes.xml");
+                    doc.Save(AppPath+"/ToDoAndNotes.xml");
                     objMain.ReloadTodoGrid();
                 }
                 else // its editing, change existing elements
                 {
                     existingId.Element("Title").Value =richTextBox_ToDo.Text;
-                    doc.Save("ToDoAndNotes.xml");
+                    doc.Save(AppPath+@"/ToDoAndNotes.xml");
 
                    
                    

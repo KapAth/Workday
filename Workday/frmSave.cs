@@ -18,7 +18,7 @@ namespace Workday
         private Form _frm;
         private string TotalTime = "";
         private string ID = "";
-        
+        private static string AppPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
         public frmSave(Form frm)
         {
             _frm = frm;
@@ -57,9 +57,9 @@ namespace Workday
         {
             try
             {
-                if (File.Exists("History.xml"))
+                if (File.Exists(AppPath+@"/History.xml"))
                 {
-                    XDocument doc = XDocument.Load(@"History.xml");
+                    XDocument doc = XDocument.Load(AppPath+@"/History.xml");
                     XElement existingId;
                     try // check if id Exists
                     {
@@ -81,7 +81,7 @@ namespace Workday
                                    new XElement("Date", DateTime.Now.ToShortDateString()),
                                    new XElement("Sessions", Form1.sessionNo),
                                    new XElement("TotalTime", TotalTime)));
-                        doc.Save("History.xml");
+                        doc.Save(AppPath+@"/History.xml");
                     }
                     else // its editing, change existing elements
                     {
@@ -89,7 +89,7 @@ namespace Workday
                         existingId.Element("Remarks").Value = richTextBox_Remarks.Text;
                         existingId.Element("TotalTime").Value = TotalTime;
                       //  existingId.Element("Date").Value = DateTime.Now.ToShortDateString();
-                        doc.Save("History.xml");
+                        doc.Save(AppPath+@"/History.xml");
 
                       //  Form1.SessionID = "";
                         Form1.edit = false;

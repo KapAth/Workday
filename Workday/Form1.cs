@@ -49,7 +49,13 @@ namespace Workday
         public static string techniqueStr= "";
         public static int sessionNo = 0;
         public static bool edit = false;
-       // public static string newID;
+        // public static string newID;
+
+        // private static string AppPath = AppDomain.CurrentDomain.BaseDirectory;
+        //private static string AppPath = Application.StartupPath;
+     //   private static string AppPath = Environment.SpecialFolder.ApplicationData.ToString();
+        private static string AppPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+
         public struct history
         {
             public string ID { get; set; }
@@ -86,15 +92,15 @@ namespace Workday
             try
             {
                 stopWatch = new Stopwatch();
-                if (!File.Exists("History.xml"))
+                if (!File.Exists(AppPath+@"/History.xml"))
                 {
                     new XDocument(
-                        new XElement("HISTORY", "")).Save("History.xml");
+                        new XElement("HISTORY", "")).Save(AppPath+@"/History.xml");
                 }
-                if (!File.Exists("ToDoAndNotes.xml"))
+                if (!File.Exists(AppPath+@"/ToDoAndNotes.xml"))
                 {
                     new XDocument(
-                        new XElement("TODO", "")).Save("ToDoAndNotes.xml");
+                        new XElement("TODO", "")).Save(AppPath+@"/ToDoAndNotes.xml");
                 }
                 button_Stop.Enabled = false;
                 button_Reset.Enabled = false;
@@ -256,7 +262,7 @@ namespace Workday
 
                     StartBreak();
 
-                    File.AppendAllText("BREAKS.txt", "break: " + nextBreak + " TotalMinutes: " + totalMinutes + Environment.NewLine);
+                   // File.AppendAllText("BREAKS.txt", "break: " + nextBreak + " TotalMinutes: " + totalMinutes + Environment.NewLine);
 
                     nextBreak = totalMinutes + workTime + breakMin;
                     breakMode = true;
@@ -609,7 +615,7 @@ namespace Workday
               
                 
                 XmlDocument doc = new XmlDocument();
-                doc.Load("History.xml");
+                doc.Load(AppPath+@"/History.xml");
                 XmlElement root = doc.DocumentElement;
                 XmlNodeList nodes = root.SelectNodes("Session");
 
@@ -855,7 +861,7 @@ namespace Workday
         {
             try
             {
-                XDocument doc = XDocument.Load(@"History.xml");
+                XDocument doc = XDocument.Load(AppPath+@"/History.xml");
 
                 XElement existingId = doc.Element("HISTORY").Elements("Session")
                        .Where(idElement => idElement.Element("ID").Value == ID)
@@ -963,13 +969,13 @@ namespace Workday
             }
             try
             {
-                XDocument doc = XDocument.Load(@"History.xml");
+                XDocument doc = XDocument.Load(AppPath+@"/History.xml");
 
                 XElement existingId = doc.Element("HISTORY").Elements("Session")
                        .Where(idElement => idElement.Element("ID").Value == ID)
                        .FirstOrDefault();
                 existingId.Remove();
-                doc.Save("History.xml");
+                doc.Save(AppPath+@"/History.xml");
             }
             catch { }
             ReloadHistoryGrid();
@@ -1031,7 +1037,7 @@ namespace Workday
             {
 
                 XmlDocument doc = new XmlDocument();
-                doc.Load("ToDoAndNotes.xml");
+                doc.Load(AppPath+@"/ToDoAndNotes.xml");
                 XmlElement root = doc.DocumentElement;
                 XmlNodeList nodes = root.SelectNodes("ToDo");
 
@@ -1104,7 +1110,7 @@ namespace Workday
             try
             {
                 XmlDocument doc = new XmlDocument();
-                doc.Load("ToDoAndNotes.xml");
+                doc.Load(AppPath+@"/ToDoAndNotes.xml");
                 XmlElement root = doc.DocumentElement;
                 // XmlNodeList nodes = root.SelectNodes("Notes");
 
@@ -1156,11 +1162,11 @@ namespace Workday
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
-                XDocument doc = XDocument.Load(@"ToDoAndNotes.xml");
+                XDocument doc = XDocument.Load(AppPath+@"/ToDoAndNotes.xml");
                 XElement existing = doc.Element("TODO");
 
                 try { existing.Element("notes").Value = richTextBox_Notes.Text; } catch { existing.Add(new XElement("notes", richTextBox_Notes.Text)); }
-                doc.Save("ToDoAndNotes.xml");
+                doc.Save(AppPath+@"/ToDoAndNotes.xml");
                 MessageBox.Show("Notes saved successfully", "Workday", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 Cursor.Current = Cursors.Default;
             }
@@ -1246,7 +1252,7 @@ namespace Workday
         {
             try
             {
-                XDocument doc = XDocument.Load(@"ToDoAndNotes.xml");
+                XDocument doc = XDocument.Load(AppPath+@"/ToDoAndNotes.xml");
 
                 XElement existingId = doc.Element("TODO").Elements("ToDo")
                        .Where(idElement => idElement.Element("ID").Value == ID)
@@ -1294,12 +1300,12 @@ namespace Workday
             }
             try
             {
-                XDocument doc = XDocument.Load(@"ToDoAndNotes.xml");
+                XDocument doc = XDocument.Load(AppPath+@"/ToDoAndNotes.xml");
 
                 XElement existingId = doc.Element("TODO").Elements("ToDo")
                        .Where(idElement => idElement.Element("ID").Value == ToDoID)
                        .FirstOrDefault();
-                try { existingId.Element("Status").Value = "Completed"; doc.Save("ToDoAndNotes.xml"); } catch { existingId.Add(new XElement("Status", "Completed")); doc.Save("ToDoAndNotes.xml"); }
+                try { existingId.Element("Status").Value = "Completed"; doc.Save(AppPath+@"/ToDoAndNotes.xml"); } catch { existingId.Add(new XElement("Status", "Completed")); doc.Save(AppPath+@"/ToDoAndNotes.xml"); }
                 ReloadTodoGrid();
                 try { SelectedGridRow(2); } catch { }
             }
@@ -1319,12 +1325,12 @@ namespace Workday
             }
             try
             {
-                XDocument doc = XDocument.Load(@"ToDoAndNotes.xml");
+                XDocument doc = XDocument.Load(AppPath+@"/ToDoAndNotes.xml");
 
                 XElement existingId = doc.Element("TODO").Elements("ToDo")
                        .Where(idElement => idElement.Element("ID").Value == ToDoID)
                        .FirstOrDefault();
-                try { existingId.Element("Status").Value = "Pending"; doc.Save("ToDoAndNotes.xml"); } catch { existingId.Add(new XElement("Status", "Pending")); doc.Save("ToDoAndNotes.xml"); }
+                try { existingId.Element("Status").Value = "Pending"; doc.Save(AppPath+@"/ToDoAndNotes.xml"); } catch { existingId.Add(new XElement("Status", "Pending")); doc.Save(AppPath+@"/ToDoAndNotes.xml"); }
                 ReloadTodoGrid();
                 try { SelectedGridRow(2); } catch { }
             }
@@ -1362,13 +1368,13 @@ namespace Workday
             }
             try
             {
-                XDocument doc = XDocument.Load(@"ToDoAndNotes.xml");
+                XDocument doc = XDocument.Load(AppPath+@"/ToDoAndNotes.xml");
 
                 XElement existingId = doc.Element("TODO").Elements("ToDo")
                        .Where(idElement => idElement.Element("ID").Value == ID)
                        .FirstOrDefault();
                 existingId.Remove();
-                doc.Save("ToDoAndNotes.xml");
+                doc.Save(AppPath+@"/ToDoAndNotes.xml");
             }
             catch { }
             ReloadTodoGrid();
