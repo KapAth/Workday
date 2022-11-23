@@ -1,6 +1,8 @@
 # Workday 
 This is a desktop app that helps you work or study without wasting too much time on breaks, fight your procrastination and also keep track of your progress.
 
+
+<!--- 
 ![1](https://user-images.githubusercontent.com/36739414/202493780-910fce56-fc47-40bd-8bc6-b8f589e6a2d6.png)
 
 
@@ -14,3 +16,5 @@ This is a desktop app that helps you work or study without wasting too much time
 
 
 ![4](https://user-images.githubusercontent.com/36739414/202494082-53b3e806-6621-44b7-b4e3-5bceea05d197.png)
+
+--->
