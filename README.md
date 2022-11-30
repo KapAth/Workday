@@ -6,6 +6,9 @@ This is a desktop app that helps you work or study without wasting too much time
 ![1](https://user-images.githubusercontent.com/36739414/202493780-910fce56-fc47-40bd-8bc6-b8f589e6a2d6.png)
 
 
+![1-1](https://user-images.githubusercontent.com/36739414/204866112-4d9a2550-c5df-4381-807d-c3a6a3c5bd83.png)
+
+
 ![1-2](https://user-images.githubusercontent.com/36739414/202563196-748295c4-5639-4f79-adda-9c6d2682f5ae.png)
 
 
