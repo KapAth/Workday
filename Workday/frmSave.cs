@@ -71,7 +71,7 @@ namespace Workday
 
                     if (existingId == null) // its not edit, create new
                     {
-                       // string NewID = DateTime.Now.ToString("yyyyMMddHHmmss");
+                       
                         XElement newSession = doc.Element("HISTORY");
                         newSession.Add(new XElement("Session",
                                    new XElement("ID", DateTime.Now.ToString("yyyyMMddHHmmss")),
@@ -88,10 +88,10 @@ namespace Workday
                         existingId.Element("Title").Value = textBox_Title.Text;
                         existingId.Element("Remarks").Value = richTextBox_Remarks.Text;
                         existingId.Element("TotalTime").Value = TotalTime;
-                      //  existingId.Element("Date").Value = DateTime.Now.ToShortDateString();
+                      
                         doc.Save(AppPath+@"/History.xml");
 
-                      //  Form1.SessionID = "";
+                      
                         Form1.edit = false;
                         Form1 objMain = (Form1)_frm;
                         objMain.ReloadHistoryGrid();
@@ -106,7 +106,7 @@ namespace Workday
             }
             catch (Exception ex)
             {
-                //string x = ex.Message;
+                
                 MessageBox.Show("WriteOrUpdateHistoryXML: " + ex.Message,"Workday",MessageBoxButtons.OK,MessageBoxIcon.Error);
             }
         }

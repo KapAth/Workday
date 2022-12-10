@@ -15,9 +15,6 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Linq;
 using System.Media;
-///  COLOR
-/// https://www.c-sharpcorner.com/article/gradient-background-tab-custom-control/
-///
 
 namespace Workday
 {
@@ -37,7 +34,7 @@ namespace Workday
         private static int workTime = 0;
         private bool stop = false;
         private  int selectedRow;
-        //  TimeSpan ts = new TimeSpan();
+        
         TimeSpan tsRemainingTime;
         private bool gridInitialized = false;
         private bool ToDogridInitialized = false;
@@ -49,11 +46,9 @@ namespace Workday
         public static string techniqueStr= "";
         public static int sessionNo = 0;
         public static bool edit = false;
-        // public static string newID;
+        
 
-        // private static string AppPath = AppDomain.CurrentDomain.BaseDirectory;
-        //private static string AppPath = Application.StartupPath;
-     //   private static string AppPath = Environment.SpecialFolder.ApplicationData.ToString();
+       
         private static string AppPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
 
         public struct history
@@ -66,6 +61,7 @@ namespace Workday
             public  DateTime date { get; set; }
             public  string sessions { get; set; }
         }
+
         public static string SessionID;
         public static string ToDoID;
         public static string totalTime;
@@ -77,11 +73,11 @@ namespace Workday
         public static string ToDoTitle;
 
 
-        //public static Form1 _frmMain;
+       
         public Form1()
         {
             InitializeComponent();
-            //_frmMain = this;
+            
             _soundPlayer = new SoundPlayer("bell.wav");
 
 
@@ -102,10 +98,12 @@ namespace Workday
                     new XDocument(
                         new XElement("TODO", "")).Save(AppPath+@"/ToDoAndNotes.xml");
                 }
+
                 button_Stop.Enabled = false;
                 button_Reset.Enabled = false;
                 label_break.Visible = false;
                 progressBar1.Visible = false;
+
                 TransparetBackground(button_Start);
                 TransparetBackground(comboBox_Technique);
                 TransparetBackground(button_Reset);
@@ -143,8 +141,7 @@ namespace Workday
                     stopwatchBreak = new Stopwatch();
                 }
 
-                /*to get new ID in case of just started
-                or keep the same ID in case of saved 2 times during same session
+                /*get new ID in case of just started or keep the same ID in case of saved 2 times during same session
                 ensures dublicates are not created in History.xml */
                 if (stopWatch.Elapsed.TotalSeconds == 0)
                 {
@@ -159,7 +156,7 @@ namespace Workday
 
                 comboBox_Technique.Enabled = false;
 
-                if (breakMode)//if started after a stop while in break
+                if (breakMode)
                 {
                     stop = false;
                     stopwatchBreak.Start();
@@ -224,7 +221,9 @@ namespace Workday
                 button_Stop.Enabled = false;
                 button_Reset.Enabled = true;
                 comboBox_Technique.Enabled = true;
+
                 TextBoxCustomMinutesEnable(true);
+
                 label_break.Visible = false;
                 progressBar1.Visible = false;
                 breakMode = false;
@@ -262,7 +261,7 @@ namespace Workday
 
                     StartBreak();
 
-                   // File.AppendAllText("BREAKS.txt", "break: " + nextBreak + " TotalMinutes: " + totalMinutes + Environment.NewLine);
+                   
 
                     nextBreak = totalMinutes + workTime + breakMin;
                     breakMode = true;
@@ -286,10 +285,7 @@ namespace Workday
                 {
                     this.WindowState = FormWindowState.Normal;
                 }
-               // try { this.Activate(); } catch { }
                
-              //  try { this.Focus(); } catch { }
-               // try { this.BringToFront(); } catch { }
                try { this.TopMost = true; } catch { }
                try { this.TopMost = false; } catch { }
             }
@@ -312,8 +308,6 @@ namespace Workday
                 label_break.Visible = true;
                 progressBar1.Visible = true;
 
-                //progressBar1.Maximum = (breakMin *60* 1000)-300;
-                //progressBar1.Value = (breakMin *60*1000)-300;
                 progressBar1.Maximum = breakMin * 60;
                 progressBar1.Value = breakMin * 60;
                 breakMode = true;
@@ -498,22 +492,6 @@ namespace Workday
             }
         }
 
-        private void Form1_Resize(object sender, EventArgs e)
-        {
-            //if (tabControl1.SelectedTab == History)
-            //{
-                //dataGridView1.Visible = false;
-                //ReloadGrid();
-                //dataGridView1.Visible = true;
-           // }
-           // else if (tabControl1.SelectedTab == ToDo)
-           // {
-                //dataGridView2.Visible = false;
-                //ReloadTodoGrid();
-                //dataGridView2.Visible = true;
-            //}
-        }
-
         private void Session_Paint(object sender, PaintEventArgs e)
         {
             PaintGradient(sender,e);
@@ -568,13 +546,13 @@ namespace Workday
 
                 var time = tsRemainingTime.Subtract(stopwatchBreak.Elapsed);
                 label_break.Text = "Break: " + string.Format("{0:D2}:{1:D2}", time.Minutes, time.Seconds);
-                // progressBar1.Value -=300;
+                
                 progressBar1.Value = (int)time.TotalSeconds;
             }
             else
             {
                 EndBreak();
-                //breakMode = false;
+                
             }
            
 
@@ -658,24 +636,8 @@ namespace Workday
                            myHistory.sessions = childNode.InnerText;
                         }
                     }
-                    //appear only the first words in datagrid
-                    //if (myHistory.remarks.Length > 50)
-                    //{
-                    //    myHistory.remarks = myHistory.remarks.Substring(0, 50);
-                    //}
-
-                   
+                    
                     myHistoryList.Add(myHistory);
-                   
-                    //try { row.Cells[0].Value = ID.Trim(); } catch { }
-                    //try { row.Cells[1].Value = title.Trim(); } catch { }
-                    //try { row.Cells[2].Value = totalTime.Trim(); } catch { }
-                    //try { row.Cells[3].Value = date.Trim(); } catch { }
-                    //try { row.Cells[4].Value = technique.Trim(); } catch { }
-                    //try { row.Cells[5].Value = sessions.Trim(); } catch { }
-                    //try { row.Cells[6].Value = remarks.Trim(); } catch { }
-                    //try { dataGridView1.Rows.Add(row); } catch { }
-                   // row.Dispose();
 
                 }
                 
@@ -700,8 +662,6 @@ namespace Workday
                 
                 dataGridView1.Refresh();
                 dataGridView1.Update();
-                
-               // dataGridView1.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.Fill);
 
             }
             catch (Exception ex)
@@ -840,7 +800,7 @@ namespace Workday
 
                         _frmSave.ShowDialog();
                         Cursor.Current = Cursors.Default;
-                        //e GlobalVariables.fForm2.TopLevel = true;
+                        
                     }
                     else
                     {
@@ -915,7 +875,7 @@ namespace Workday
                     try
                     {
                         dataGridView1.CurrentCell = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex];
-                        // Can leave these here - doesn't hurt
+                        
                         dataGridView1.Rows[e.RowIndex].Selected = true;
 
                         dataGridView1.Focus();
@@ -955,8 +915,7 @@ namespace Workday
         private void DeleteSelectedSession()
         {
             if (MessageBox.Show("Are you sure you want to delete the selected session ?", "Workday", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No) return;
-           // if (MessageBox.Show("Are you sure you want to delete the selected session ? (1/2)", "WorkDay", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No) return;
-           // if (MessageBox.Show("Are you really sure you want to delete the selected session ? (2/2)","WorkDay", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No) return;
+     
             string ID = "";
             try
             {
@@ -1112,7 +1071,7 @@ namespace Workday
                 XmlDocument doc = new XmlDocument();
                 doc.Load(AppPath+@"/ToDoAndNotes.xml");
                 XmlElement root = doc.DocumentElement;
-                // XmlNodeList nodes = root.SelectNodes("Notes");
+                
 
                 try { richTextBox_Notes.Text = doc.DocumentElement["notes"].InnerText; } catch { richTextBox_Notes.Text = ""; }
             }
@@ -1189,7 +1148,7 @@ namespace Workday
                     try
                     {
                         dataGridView2.CurrentCell = dataGridView2.Rows[e.RowIndex].Cells[e.ColumnIndex];
-                        // Can leave these here - doesn't hurt
+                        
                         dataGridView2.Rows[e.RowIndex].Selected = true;
 
                         dataGridView2.Focus();
@@ -1229,7 +1188,7 @@ namespace Workday
 
                         _frmToDo.ShowDialog();
                         Cursor.Current = Cursors.Default;
-                        //e GlobalVariables.fForm2.TopLevel = true;
+                        
                     }
                     else
                     {
@@ -1354,8 +1313,7 @@ namespace Workday
         private void DeleteSelectedToDo()
         {
             if (MessageBox.Show("Are you sure you want to delete the selected ToDo ?", "Workday", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No) return;
-            // if (MessageBox.Show("Are you sure you want to delete the selected session ? (1/2)", "WorkDay", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No) return;
-            // if (MessageBox.Show("Are you really sure you want to delete the selected session ? (2/2)","WorkDay", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No) return;
+
             string ID = "";
             try
             {

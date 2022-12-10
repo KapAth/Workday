@@ -50,7 +50,7 @@ namespace Workday
 
                 if (existingId == null) // its not edit, create new
                 {
-                    // string NewID = DateTime.Now.ToString("yyyyMMddHHmmss");
+                    
                     XElement newSession = doc.Element("TODO");
                     newSession.Add(new XElement("ToDo",
                                new XElement("ID", DateTime.Now.ToString("yyyyMMddHHmmss")),
@@ -77,7 +77,7 @@ namespace Workday
 
                 
                
-                //MessageBox.Show("Saved Succefully!", "Workday", MessageBoxButtons.OK, MessageBoxIcon.Information);
+  
 
 
             }
@@ -92,6 +92,7 @@ namespace Workday
         {
             try
             {
+                int a;
                 if (Form1.edit)
                 {
                     richTextBox_ToDo.Text = Form1.ToDoTitle;
@@ -106,7 +107,9 @@ namespace Workday
 
         private void frmToDo_FormClosing(object sender, FormClosingEventArgs e)
         {
-            try { Form1.ToDoID = ""; } catch { } //in case edit is open but not done
+            //in case edit is open but not done
+
+            try { Form1.ToDoID = ""; } catch { } 
         }
     }
 }
